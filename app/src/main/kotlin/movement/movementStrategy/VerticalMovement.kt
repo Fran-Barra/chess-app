@@ -2,7 +2,6 @@ package movement.movementStrategy
 
 import board.Board
 import movement.MovementStrategy
-import movement.movementStrategy.commonLoggics.isVertical
 import pieceEatingRuler.PieceEatingRuler
 import player.Player
 import vector.Vector
@@ -24,5 +23,11 @@ class VerticalMovement: MovementStrategy {
             if (board.getPieceInPosition(Vector(x, y)).isSuccess)
                 return true
         return false
+    }
+
+    private fun isVertical(origin: Vector, destini: Vector): Boolean{
+        if (origin.x != destini.x) return false
+        if (origin.y == destini.y) return false
+        return true
     }
 }

@@ -11,6 +11,7 @@ class CheckmateWinningCondition: WinningConditionStrategy {
     override fun checkWinningConditions(board: Board, actualPlayer: Player, turnsController: TurnsController,
         pieceEatingRuler: PieceEatingRuler, pieceMovementStrategy: Map<Int, MovementStrategy>,
         specialMovementsController: SpecialMovementController): Result<Boolean> {
-        TODO("Not yet implemented")
+        //TODO("Not yet implemented")
+        return Result.failure(Exception("Conditions not met"))
     }
 }
