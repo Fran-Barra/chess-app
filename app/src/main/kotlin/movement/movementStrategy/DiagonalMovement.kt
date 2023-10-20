@@ -16,7 +16,7 @@ class DiagonalMovement: MovementStrategy {
 
         val xMul = actual.x - destination.x/ abs(actual.x - destination.x)
         val yMul = actual.y - destination.y/ abs(actual.y - destination.y)
-        for (i in actual.y+1..<destination.y){
+        for (i in actual.y+1..destination.y){
             if (board.getPieceInPosition(Vector(i*xMul, i*yMul)).isSuccess)
                 return false
         }

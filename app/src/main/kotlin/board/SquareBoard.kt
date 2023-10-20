@@ -49,4 +49,12 @@ class SquareBoard(val board: Map<Vector, Piece?>): Board {
     override fun positionExists(position: Vector): Boolean {
         return board.containsKey(position)
     }
+
+    override fun getPiecesAndPosition(): List<Pair<Piece, Vector>> {
+        val piecesAndPositions = mutableListOf<Pair<Piece, Vector>>()
+        for ((vector, piece) in board)
+            piece?.let { piecesAndPositions.add(it to vector) }
+
+        return piecesAndPositions
+    }
 }

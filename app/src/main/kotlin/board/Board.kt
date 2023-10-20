@@ -18,4 +18,7 @@ interface Board {
 
     /**Returns true if the position exists and false if not*/
     fun positionExists(position: Vector): Boolean
+
+    /**Returns a all pieces and their position*/
+    fun getPiecesAndPosition(): List<Pair<Piece, Vector>>
 }

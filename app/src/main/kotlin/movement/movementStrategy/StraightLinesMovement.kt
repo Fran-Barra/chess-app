@@ -17,11 +17,11 @@ class StraightLinesMovement: MovementStrategy {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
 
         if (actual.x == destination.x){
-            for (y in actual.y+1..<destination.y)
+            for (y in actual.y+1..destination.y)
                 if (board.getPieceInPosition(Vector(actual.x, y)).isSuccess)
                     return false
         }else{
-            for (x in actual.x+1..<destination.x)
+            for (x in actual.x+1..destination.x)
                 if (board.getPieceInPosition(Vector(x, actual.x)).isSuccess)
                     return false
         }

@@ -8,7 +8,7 @@ import turnsController.TurnsController
 import vector.Vector
 import winningConditionStrategy.WinningConditionStrategy
 
-class Game (private val board: Board,
+class Game (public val board: Board,
             public val actualPlayer: Player,
             private val turnsController: TurnsController,
             private val pieceEatingRuler: PieceEatingRuler,
@@ -17,6 +17,7 @@ class Game (private val board: Board,
             private val winningCondition: WinningConditionStrategy
     ){
 
+    //TODO: made an own Result that allows to return finish/win
     fun makeMovement(player: Player, origin: Vector, destination: Vector): Result<Game> {
         if (player != actualPlayer) return Result.failure(Exception("Is not the player turn"))
 
