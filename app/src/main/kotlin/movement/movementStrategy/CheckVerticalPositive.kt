@@ -12,10 +12,4 @@ class CheckVerticalPositive: MovementStrategy {
         if (!isVertical(actual, destination)) return false
         return destination.y > actual.y
     }
-
-    private fun isVertical(origin: Vector, destini: Vector): Boolean{
-        if (origin.x != destini.x) return false
-        if (origin.y == destini.y) return false
-        return true
-    }
 }
