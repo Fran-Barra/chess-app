@@ -2,6 +2,7 @@ package movement.movementStrategy
 
 import board.Board
 import movement.MovementStrategy
+import movement.movementStrategy.commonLoggics.isVertical
 import pieceEatingRuler.PieceEatingRuler
 import player.Player
 import vector.Vector
@@ -12,7 +13,7 @@ class VerticalMovement: MovementStrategy {
         if (!isVertical(actual, destination)) return false
         return !checkIfPieceInMiddlePath(actual, destination, board)
     }
-    
+
     private fun checkIfPieceInMiddlePath(origin: Vector, destini: Vector, board: Board): Boolean{
         if (origin.y < destini.y) return checkIfPieceBetweenYMinAndYMax(origin.y, destini.y, origin.x, board)
         return checkIfPieceBetweenYMinAndYMax(destini.y, origin.y, origin.x, board)

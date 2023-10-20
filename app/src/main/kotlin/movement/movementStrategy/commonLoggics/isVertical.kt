@@ -1,4 +1,4 @@
-package movement.movementStrategy
+package movement.movementStrategy.commonLoggics
 
 import vector.Vector
 
