@@ -2,6 +2,7 @@ package movement.movementStrategy
 
 import board.Board
 import movement.MovementStrategy
+import myMath.distance
 import myMath.pow
 import piece.Piece
 import pieceEatingRuler.PieceEatingRuler
@@ -14,8 +15,7 @@ class DistanceLimitMovement(val maxDistance: Int): MovementStrategy {
                                destination: Vector, board: Board): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
 
-        if (sqrt((pow((actual.x - destination.x), 2) + pow((actual.y - destination.y), 2)).toDouble()
-            ).toInt() > maxDistance) return false
+        if (distance(actual, destination).toInt() > maxDistance) return false
         return true
     }
 }
