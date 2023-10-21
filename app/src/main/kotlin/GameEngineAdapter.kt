@@ -4,7 +4,7 @@ import player.Player
 import vector.Vector
 
 
-class GameEngineAdapter(private val game: Game): GameEngine {
+class GameEngineAdapter(private var game: Game): GameEngine {
     override fun init(): InitialState {
         return InitialState(BoardSize(8, 8),
             fromGameToListPieces(game),
@@ -33,9 +33,10 @@ class GameEngineAdapter(private val game: Game): GameEngine {
             return InvalidMove(r.message!!)
         }else{
             //TODO: winning
+            game = gameResult.getOrThrow()
             return NewGameState(
-                fromGameToListPieces(gameResult.getOrThrow()),
-                fromPlayerToPlayerColor(gameResult.getOrThrow().actualPlayer)
+                fromGameToListPieces(game),
+                fromPlayerToPlayerColor(game.actualPlayer)
             )
         }
     }

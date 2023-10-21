@@ -5,7 +5,10 @@ import event.GameEvent
 import javafx.application.Application
 import movement.MovementStrategy
 import movement.SpecialMovement
+import movement.movementStrategy.*
 import movement.specialMovement.BaseSpecialMovementController
+import movement.unionMovement.AndUnionMovement
+import movement.unionMovement.OrUnionMovement
 import piece.BasicPiece
 import piece.Piece
 import pieceEatingRuler.BasicEatingRuler
@@ -32,14 +35,15 @@ class ChessGame: AbstractChessGameApplication() {
 
 
         //TODO: add strategies
-        val movementStrategies: Map<Int, MovementStrategy> = mapOf()
+        val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
+        movementStrategies[5] = buildPawnRules()
         //TODO: fill this
         val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
 
         return Game(
             board,
             players[0],
-            CircleTurnController(players, 0),
+            CircleTurnController(players, 1),
             BasicEatingRuler(),
             movementStrategies,
             BaseSpecialMovementController(specialMovements),
@@ -83,7 +87,7 @@ class ChessGame: AbstractChessGameApplication() {
         fillBoard = fillBoard.addPiece(BasicPiece(3, color), Vector(7, row))
         fillBoard = fillBoard.addPiece(BasicPiece(3, color), Vector(2, row))
 
-        //bishop
+        //bishops
         fillBoard = fillBoard.addPiece(BasicPiece(2, color), Vector(6, row))
         fillBoard = fillBoard.addPiece(BasicPiece(2, color), Vector(3, row))
 
@@ -92,5 +96,11 @@ class ChessGame: AbstractChessGameApplication() {
         fillBoard = fillBoard.addPiece(BasicPiece(1, color), Vector(4, row))
 
         return fillBoard
+    }
+
+    private fun buildPawnRules(): MovementStrategy{
+        val con1 = AndUnionMovement(listOf(CheckVerticalPositive(), VerticalMovement(), DontEatInDestini()))
+        val con2 = AndUnionMovement(listOf(DiagonalMovement(), EatInDestini()))
+        return AndUnionMovement(listOf(OrUnionMovement(listOf(con1, con2)), DistanceSmallerThanX(2)))
     }
 }
