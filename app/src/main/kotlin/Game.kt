@@ -26,7 +26,7 @@ class Game (public val board: Board,
         val piece: Piece = pieceR.getOrNull()!!
 
         if (!player.playerControlColor(piece.getPieceColor()))
-            Result.failure<Pair<Boolean, Game>>(Exception("This color is not controlled by the actual player"))
+            return Result.failure(Exception("This color is not controlled by the actual player"))
 
         //TODO("Integrate special movements")
         //specialMovementsController.checkMovement(pieceEatingRuler, player, origin, destination, board)
