@@ -2,10 +2,9 @@ package board
 
 import piece.Piece
 import vector.Vector
-import java.lang.Exception
 import java.util.NoSuchElementException
 
-class SquareBoard(val board: Map<Vector, Piece?>): Board {
+class MapBoard(val board: Map<Vector, Piece?>): Board {
 
     override fun movePiece(piece: Piece, destination: Vector): Board {
         val updatedPieceMap = board.toMutableMap()
@@ -16,11 +15,11 @@ class SquareBoard(val board: Map<Vector, Piece?>): Board {
         updatedPieceMap[currentPosition] = null
         updatedPieceMap[destination] = piece
 
-        return SquareBoard(updatedPieceMap)
+        return MapBoard(updatedPieceMap)
     }
 
     override fun addPiece(piece: Piece, position: Vector): Board {
-        return SquareBoard(board.toMutableMap().apply {if (containsKey(position)) put(position, piece)})
+        return MapBoard(board.toMutableMap().apply {if (containsKey(position)) put(position, piece)})
     }
 
     override fun removePiece(piece: Piece): Board {
@@ -30,7 +29,7 @@ class SquareBoard(val board: Map<Vector, Piece?>): Board {
         if (currentPosition == null) return this
         updatedPieceMap[currentPosition] = null
 
-        return SquareBoard(updatedPieceMap)
+        return MapBoard(updatedPieceMap)
     }
 
     override fun getPieceInPosition(position: Vector): Result<Piece> {

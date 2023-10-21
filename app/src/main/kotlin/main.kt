@@ -1,5 +1,5 @@
 import board.Board
-import board.SquareBoard
+import board.MapBoard
 import edu.austral.dissis.chess.gui.*
 import event.GameEvent
 import javafx.application.Application
@@ -30,7 +30,7 @@ class ChessGame: AbstractChessGameApplication() {
         val players: List<Player> = listOf<Player>(MulticolorPlayer(0, listOf(0)),
             MulticolorPlayer(1, listOf(1)))
 
-        var board: Board = SquareBoard(createSquareBoard(8, 8))
+        var board: Board = MapBoard(createSquareBoard(8, 8))
         board = fillBoard(board);
 
 
