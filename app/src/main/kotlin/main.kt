@@ -1,5 +1,6 @@
 import board.Board
 import board.MapBoard
+import board.boardFactory.BaseBoardFiller
 import board.boardFactory.RectangularBoardBuilder
 import edu.austral.dissis.chess.gui.*
 import event.GameEvent
@@ -32,7 +33,8 @@ class ChessGame: AbstractChessGameApplication() {
             MulticolorPlayer(1, listOf(1)))
 
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
-        board = fillBoard(board);
+
+        board = BaseBoardFiller().fillBoard(board)
 
 
         //TODO: add strategies
@@ -50,45 +52,6 @@ class ChessGame: AbstractChessGameApplication() {
             BaseSpecialMovementController(specialMovements),
             CheckmateWinningCondition(),
         )
-    }
-
-    private fun fillBoard(board: Board): Board{
-        var filledBoard = board
-        filledBoard = fillRowWithPawns(filledBoard, 0, 7)
-        filledBoard = fillRowWithPawns(filledBoard, 1, 2)
-
-        filledBoard = fillRowWithBasicPieces(filledBoard, 0, 8)
-        filledBoard = fillRowWithBasicPieces(filledBoard, 1, 1)
-
-        return filledBoard
-    }
-
-    private fun fillRowWithPawns(filledBoard: Board, color: Int, row: Int): Board {
-        var board = filledBoard
-        for (x in 1..8)
-            board = board.addPiece(BasicPiece(5, color), Vector(x, row))
-        return board
-    }
-
-    private fun fillRowWithBasicPieces(board: Board, color: Int, row: Int): Board {
-        var fillBoard: Board = board
-        //rooks
-        fillBoard = fillBoard.addPiece(BasicPiece(4, color), Vector(8, row))
-        fillBoard = fillBoard.addPiece(BasicPiece(4, color), Vector(1, row))
-
-        //knights
-        fillBoard = fillBoard.addPiece(BasicPiece(3, color), Vector(7, row))
-        fillBoard = fillBoard.addPiece(BasicPiece(3, color), Vector(2, row))
-
-        //bishops
-        fillBoard = fillBoard.addPiece(BasicPiece(2, color), Vector(6, row))
-        fillBoard = fillBoard.addPiece(BasicPiece(2, color), Vector(3, row))
-
-        //king and queen
-        fillBoard = fillBoard.addPiece(BasicPiece(0, color), Vector(5, row))
-        fillBoard = fillBoard.addPiece(BasicPiece(1, color), Vector(4, row))
-
-        return fillBoard
     }
 
     private fun buildPawnRules(): MovementStrategy{
