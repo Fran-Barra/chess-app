@@ -1,5 +1,6 @@
 import board.Board
 import board.MapBoard
+import board.boardFactory.RectangularBoardBuilder
 import edu.austral.dissis.chess.gui.*
 import event.GameEvent
 import javafx.application.Application
@@ -30,7 +31,7 @@ class ChessGame: AbstractChessGameApplication() {
         val players: List<Player> = listOf<Player>(MulticolorPlayer(0, listOf(0)),
             MulticolorPlayer(1, listOf(1)))
 
-        var board: Board = MapBoard(createSquareBoard(8, 8))
+        var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
         board = fillBoard(board);
 
 
@@ -49,14 +50,6 @@ class ChessGame: AbstractChessGameApplication() {
             BaseSpecialMovementController(specialMovements),
             CheckmateWinningCondition(),
         )
-    }
-
-    private fun createSquareBoard(columns: Int, rows: Int): Map<Vector, Piece?>{
-        val board: MutableMap<Vector, Piece?> = mutableMapOf()
-        for (x in 1..columns)
-            for (y in 1 .. rows)
-                board.put(Vector(x, y), null)
-        return board;
     }
 
     private fun fillBoard(board: Board): Board{
