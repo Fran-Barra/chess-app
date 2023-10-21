@@ -16,11 +16,6 @@ class DistanceLimitMovement(val maxDistance: Int): MovementStrategy {
 
         if (sqrt((pow((actual.x - destination.x), 2) + pow((actual.y - destination.y), 2)).toDouble()
             ).toInt() > maxDistance) return false
-
-        //TODO("move eating logic to gameManager")
-        val pieceInDestination: Result<Piece> = board.getPieceInPosition(destination)
-        if (!pieceInDestination.isSuccess) return true
-        return pieceEatingRuler.canPieceEatPiece(board.getPieceInPosition(actual).getOrThrow(),
-            pieceInDestination.getOrThrow())
+        return true
     }
 }

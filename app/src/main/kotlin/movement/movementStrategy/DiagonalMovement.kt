@@ -20,11 +20,6 @@ class DiagonalMovement: MovementStrategy {
             if (board.getPieceInPosition(Vector(i*xMul, i*yMul)).isSuccess)
                 return false
         }
-
-        //TODO: move eating logic to gameManager
-        val pieceInDestination: Result<Piece> = board.getPieceInPosition(destination)
-        if (!pieceInDestination.isSuccess) return true
-        return pieceEatingRuler.canPieceEatPiece(board.getPieceInPosition(actual).getOrThrow(),
-            pieceInDestination.getOrThrow())
+        return true
     }
 }
