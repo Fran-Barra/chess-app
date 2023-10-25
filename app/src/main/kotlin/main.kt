@@ -43,6 +43,7 @@ class ChessGame: AbstractChessGameApplication() {
         //TODO: add strategies
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
         movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
+        movementStrategies[2] = DiagonalMovement
         movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
         movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()
         //TODO: fill this
