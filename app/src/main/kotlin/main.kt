@@ -8,6 +8,7 @@ import javafx.application.Application
 import movement.MovementStrategy
 import movement.SpecialMovement
 import movement.movementStrategy.*
+import movement.movementStrategy.movementStrategyFactory.PawnMovementStrategy
 import movement.specialMovement.BaseSpecialMovementController
 import movement.unionMovement.AndUnionMovement
 import movement.unionMovement.OrUnionMovement
@@ -39,7 +40,7 @@ class ChessGame: AbstractChessGameApplication() {
 
         //TODO: add strategies
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
-        movementStrategies[5] = buildPawnRules()
+        movementStrategies[5] = PawnMovementStrategy().getMovementStrategy()
         //TODO: fill this
         val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
 
@@ -52,11 +53,5 @@ class ChessGame: AbstractChessGameApplication() {
             BaseSpecialMovementController(specialMovements),
             CheckmateWinningCondition(),
         )
-    }
-
-    private fun buildPawnRules(): MovementStrategy{
-        val con1 = AndUnionMovement(listOf(CheckVerticalPositive(), VerticalMovement(), DontEatInDestini()))
-        val con2 = AndUnionMovement(listOf(DiagonalMovement(), EatInDestini()))
-        return AndUnionMovement(listOf(OrUnionMovement(listOf(con1, con2)), DistanceSmallerThanX(2)))
     }
 }
