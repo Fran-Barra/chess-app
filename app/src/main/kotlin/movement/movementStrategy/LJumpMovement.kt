@@ -13,11 +13,11 @@ object LJumpMovement: MovementStrategy {
                                destination: Vector, board: Board): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
 
-        if (abs(actual.x - destination.x) == 1)
+        if (abs(actual.x - destination.x) == 1) {
             if (abs(actual.y - destination.y) != 2) return false
-        else if (abs(actual.x - destination.x) == 2)
+        }else if (abs(actual.x - destination.x) == 2) {
             if (abs(actual.y - destination.y) != 1) return false
-        else return false
+        }else return false
         return true
     }
 }
