@@ -9,6 +9,7 @@ import movement.MovementStrategy
 import movement.SpecialMovement
 import movement.movementStrategy.*
 import movement.movementStrategy.movementStrategyFactory.PawnMovementStrategy
+import movement.movementStrategy.movementStrategyFactory.QueenMovementStrategy
 import movement.movementStrategy.movementStrategyFactory.RookMovementStrategy
 import movement.specialMovement.BaseSpecialMovementController
 import movement.unionMovement.AndUnionMovement
@@ -41,6 +42,7 @@ class ChessGame: AbstractChessGameApplication() {
 
         //TODO: add strategies
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
+        movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
         movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
         movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()
         //TODO: fill this
