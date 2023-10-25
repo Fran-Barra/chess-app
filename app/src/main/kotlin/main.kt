@@ -8,6 +8,7 @@ import javafx.application.Application
 import movement.MovementStrategy
 import movement.SpecialMovement
 import movement.movementStrategy.*
+import movement.movementStrategy.movementStrategyFactory.KingMovementStrategy
 import movement.movementStrategy.movementStrategyFactory.PawnMovementStrategy
 import movement.movementStrategy.movementStrategyFactory.QueenMovementStrategy
 import movement.movementStrategy.movementStrategyFactory.RookMovementStrategy
@@ -40,13 +41,14 @@ class ChessGame: AbstractChessGameApplication() {
         board = BaseBoardFiller().fillBoard(board)
 
 
-        //TODO: add strategies
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
+        movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
         movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
         movementStrategies[2] = DiagonalMovement
         movementStrategies[3] = LJumpMovement
         movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
         movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()
+
         //TODO: fill this
         val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
 
