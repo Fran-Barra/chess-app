@@ -6,7 +6,7 @@ import pieceEatingRuler.PieceEatingRuler
 import player.Player
 import vector.Vector
 
-class VerticalMovement: MovementStrategy {
+object VerticalMovement: MovementStrategy {
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                                destination: Vector, board: Board): Boolean {
         if (!isVertical(actual, destination)) return false

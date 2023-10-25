@@ -8,7 +8,7 @@ import player.Player
 import vector.Vector
 import kotlin.math.abs
 
-class DiagonalMovement: MovementStrategy {
+object DiagonalMovement: MovementStrategy {
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                                destination: Vector, board: Board): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
