@@ -53,7 +53,10 @@ class MapBoard(val board: Map<Vector, Piece?>): Board {
         val piecesAndPositions = mutableListOf<Pair<Piece, Vector>>()
         for ((vector, piece) in board)
             piece?.let { piecesAndPositions.add(it to vector) }
-
         return piecesAndPositions
+    }
+
+    override fun getBoardAssList(): List<Pair<Vector, Piece?>> {
+        return  board.toList()
     }
 }

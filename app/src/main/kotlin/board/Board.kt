@@ -21,4 +21,6 @@ interface Board {
 
     /**Returns a all pieces and their position*/
     fun getPiecesAndPosition(): List<Pair<Piece, Vector>>
+
+    fun getBoardAssList(): List<Pair<Vector, Piece?>>
 }
