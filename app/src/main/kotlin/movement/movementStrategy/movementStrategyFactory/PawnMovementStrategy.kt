@@ -5,6 +5,7 @@ import movement.movementStrategy.*
 import movement.unionMovement.AndUnionMovement
 import movement.unionMovement.OrUnionMovement
 
+//TODO: consider making the factories actual strategies
 object PawnMovementStrategy: MovementStrategyFactory {
     private val strategy: MovementStrategy by lazy {
         val con1 = AndUnionMovement(listOf(CheckVerticalPositive, VerticalMovement, DontEatInDestini))

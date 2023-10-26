@@ -8,10 +8,7 @@ import javafx.application.Application
 import movement.MovementStrategy
 import movement.SpecialMovement
 import movement.movementStrategy.*
-import movement.movementStrategy.movementStrategyFactory.KingMovementStrategy
-import movement.movementStrategy.movementStrategyFactory.PawnMovementStrategy
-import movement.movementStrategy.movementStrategyFactory.QueenMovementStrategy
-import movement.movementStrategy.movementStrategyFactory.RookMovementStrategy
+import movement.movementStrategy.movementStrategyFactory.*
 import movement.specialMovement.BaseSpecialMovementController
 import movement.unionMovement.AndUnionMovement
 import movement.unionMovement.OrUnionMovement
@@ -44,10 +41,12 @@ class ChessGame: AbstractChessGameApplication() {
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
         movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
         movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
-        movementStrategies[2] = DiagonalMovement
-        movementStrategies[3] = LJumpMovement
+        movementStrategies[2] = BishopMovementStrategy.getMovementStrategy()
+        movementStrategies[3] = KnightMovementStrategy.getMovementStrategy()
         movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
         movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()
+
+        //TODO: can't eat own troops
 
         //TODO: fill this
         val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
