@@ -20,7 +20,7 @@ object DiagonalMovement: MovementStrategy {
     private fun pathIsEmpty(origin: Vector, destiny: Vector, board: Board): Boolean {
         val xDir = if (origin.x < destiny.x) 1 else -1
         val yDir = if (origin.y < destiny.y) 1 else -1
-        for (i in 1..abs(origin.x-destiny.x))
+        for (i in 1 until abs(origin.x-destiny.x))
             if (board.getPieceInPosition(Vector(i*xDir + origin.x, i*yDir + origin.y)).isSuccess)
                 return false
         return true
