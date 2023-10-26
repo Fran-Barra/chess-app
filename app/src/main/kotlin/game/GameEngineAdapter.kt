@@ -1,3 +1,5 @@
+package game
+
 import edu.austral.dissis.chess.gui.*
 import piece.Piece
 import player.Player

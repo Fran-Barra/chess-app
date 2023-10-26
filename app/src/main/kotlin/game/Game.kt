@@ -1,4 +1,7 @@
+package game
+
 import board.Board
+import exceptionHandler
 import movement.MovementStrategy
 import movement.SpecialMovementController
 import piece.Piece
@@ -50,8 +53,10 @@ class Game (public val board: Board,
         val nextPlayer: Player = getNextPlayer.getOrNull()?.first!!
         val newTurnsControllerStatus: TurnsController = getNextPlayer.getOrNull()?.second!!
         //TODO: special movement strategy new is needed
-        return Result.success(Game(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
-            pieceMovementStrategy, specialMovementsController, winningCondition))
+        return Result.success(
+            Game(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
+            pieceMovementStrategy, specialMovementsController, winningCondition)
+        )
     }
 
 
