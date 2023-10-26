@@ -14,12 +14,15 @@ object DiagonalMovement: MovementStrategy {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
         if (abs(actual.x - destination.x) != abs(actual.y - destination.y)) return false
 
-        val xMul = actual.x - destination.x/ abs(actual.x - destination.x)
-        val yMul = actual.y - destination.y/ abs(actual.y - destination.y)
-        for (i in actual.y+1..destination.y){
-            if (board.getPieceInPosition(Vector(i*xMul, i*yMul)).isSuccess)
+        return pathIsEmpty(actual, destination, board)
+    }
+
+    private fun pathIsEmpty(origin: Vector, destiny: Vector, board: Board): Boolean {
+        val xDir = if (origin.x < destiny.x) 1 else -1
+        val yDir = if (origin.y < destiny.y) 1 else -1
+        for (i in 1..abs(origin.x-destiny.x))
+            if (board.getPieceInPosition(Vector(i*xDir + origin.x, i*yDir + origin.y)).isSuccess)
                 return false
-        }
         return true
     }
 }
