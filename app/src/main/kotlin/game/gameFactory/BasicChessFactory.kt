@@ -14,7 +14,6 @@ import pieceEatingRuler.BasicEatingRuler
 import player.MulticolorPlayer
 import player.Player
 import turnsController.CircleTurnController
-import winningConditionStrategy.CheckmateWinningCondition
 import winningConditionStrategy.TotalAnnihilationWinningCondition
 
 object BasicChessFactory: GameFactory {
