@@ -3,7 +3,7 @@ package movement.movementStrategy.gameMovementsFactory
 import movement.MovementStrategy
 import movement.movementStrategy.movementStrategyFactory.*
 
-object BishopForPrincessMovements: GameMovementsFactory {
+object RebellionChessMovements: GameMovementsFactory {
     override fun getMovementsStrategies(): Map<Int, MovementStrategy> {
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
         movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
