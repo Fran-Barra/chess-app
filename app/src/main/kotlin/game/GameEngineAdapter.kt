@@ -29,17 +29,14 @@ class GameEngineAdapter(private var game: Game): GameEngine {
         return Position(vec.y, vec.x)
     }
 
-    private fun fromGameResultToMoveResult(gameResult: Result<Game>): MoveResult{
-        if (gameResult.isFailure){
-            val r = gameResult.exceptionOrNull() ?: return InvalidMove("Unexpected failure");
-            return InvalidMove(r.message!!)
-        }else{
-            //TODO: winning
-            game = gameResult.getOrThrow()
-            return NewGameState(
-                fromGameToListPieces(game),
-                fromPlayerToPlayerColor(game.actualPlayer)
-            )
+    private fun fromGameResultToMoveResult(gameResult: GameMovementResult): MoveResult {
+        return when (gameResult) {
+            is PlayerWon -> GameOver(fromPlayerToPlayerColor(gameResult.player))
+            is MovementFailed -> InvalidMove(gameResult.message)
+            is MovementSuccessful -> {
+                game = gameResult.newGameState
+                NewGameState(fromGameToListPieces(game), fromPlayerToPlayerColor(game.actualPlayer))
+            }
         }
     }
 
