@@ -41,7 +41,7 @@ class ChessGame (private val board: Board,
         val newBoard: Board = board.movePiece(piece, destination)
 
         //TODO: special movement strategy new is needed
-        val wonR: Result<Boolean> = winningCondition.checkWinningConditions(board, actualPlayer, turnsController,
+        val wonR: Result<Boolean> = winningCondition.checkWinningConditions(newBoard, actualPlayer, turnsController,
             pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
         if (wonR.isFailure)
             return manageFailure(wonR, "WinningConditionStrategy", "checkWinningConditions")
