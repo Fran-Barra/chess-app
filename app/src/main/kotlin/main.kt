@@ -6,10 +6,12 @@ import event.GameEvent
 import game.Game
 import game.GameEngineAdapter
 import game.gameFactory.BasicChessFactory
+import game.gameFactory.RebellionChessFactory
 import javafx.application.Application
 import movement.MovementStrategy
 import movement.SpecialMovement
 import movement.movementStrategy.gameMovementsFactory.BasicChessMovements
+import movement.movementStrategy.gameMovementsFactory.RebellionChessMovements
 import movement.specialMovement.BaseSpecialMovementController
 import piece.Piece
 import pieceEatingRuler.BasicEatingRuler
@@ -23,6 +25,6 @@ fun main() {
 }
 
 class ChessGame: AbstractChessGameApplication() {
-    override val gameEngine: GameEngine = GameEngineAdapter(BasicChessFactory.getGame())
+    override val gameEngine: GameEngine = GameEngineAdapter(RebellionChessFactory.getGame())
     override val imageResolver: ImageResolver = CachedImageResolver(DefaultImageResolver())
 }

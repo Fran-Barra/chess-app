@@ -1,5 +1,6 @@
 package game
 
+import board.Board
 import edu.austral.dissis.chess.gui.*
 import piece.Piece
 import player.Player
@@ -8,7 +9,8 @@ import vector.Vector
 
 class GameEngineAdapter(private var game: Game): GameEngine {
     override fun init(): InitialState {
-        return InitialState(BoardSize(8, 8),
+        val boardSize: Pair<Int, Int> = getSquareBoardSize(game.board)
+        return InitialState(BoardSize(boardSize.first, boardSize.second),
             fromGameToListPieces(game),
             fromPlayerToPlayerColor(game.actualPlayer))
     }
@@ -65,6 +67,24 @@ class GameEngineAdapter(private var game: Game): GameEngine {
     private fun fromColorIdToPlayerColor(colorId: Int): PlayerColor{
         if (colorId == 0) return PlayerColor.WHITE
         return PlayerColor.BLACK
+    }
+
+    private fun getSquareBoardSize(board: Board): Pair<Int, Int> {
+        val positions: List<Pair<Vector, Piece?>> = board.getBoardAssList()
+        var xMin = positions[0].first.x
+        var xMax = positions[0].first.x
+        var yMin = positions[0].first.y
+        var yMax = positions[0].first.y
+
+        for (position in positions) {
+            if (position.first.x < xMin) xMin = position.first.x
+            if (position.first.x > xMax) xMax = position.first.x
+            if (position.first.y < yMin) yMin = position.first.y
+            if (position.first.y > yMax) yMax = position.first.y
+
+        }
+
+        return Pair(xMax-xMin, yMax-yMin)
     }
 
     private fun getPieceTypeInStringFormat(piece: Piece): String{
