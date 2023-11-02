@@ -1,4 +1,4 @@
-package chess.game
+package checkers.game
 
 import boardGame.board.Board
 import boardGame.board.Vector
@@ -10,15 +10,19 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController
 import boardGame.winningConditionStrategy.WinningConditionStrategy
+import chess.game.ChessGame
 
-class ChessGame (private val board: Board,
-                 private val actualPlayer: Player,
-                 private val turnsController: TurnsController,
-                 private val pieceEatingRuler: PieceEatingRuler,
-                 private val pieceMovementStrategy: Map<Int, MovementStrategy>,
-                 private val specialMovementsController: SpecialMovementController,
-                 private val winningCondition: WinningConditionStrategy
-    ): Game {
+class CheckersGame(private val board: Board,
+                   private val actualPlayer: Player,
+                   private val turnsController: TurnsController,
+                   private val pieceEatingRuler: PieceEatingRuler,
+                   private val pieceMovementStrategy: Map<Int, MovementStrategy>,
+                   private val specialMovementsController: SpecialMovementController,
+                   private val winningCondition: WinningConditionStrategy
+): Game {
+    override fun getActualPlayer(): Player = actualPlayer
+    override fun getBoard(): Board = board
+
     override fun makeMovement(player: Player, origin: Vector, destination: Vector): GameMovementResult {
         if (player != actualPlayer) return MovementFailed("Is not the player turn")
 
@@ -50,6 +54,7 @@ class ChessGame (private val board: Board,
 
         val getNextPlayer: Result<Pair<Player, TurnsController>> = turnsController.getNextPlayerTurn()
 
+        //TODO: if MoveWith eat and it is posible to
         if (getNextPlayer.isFailure)
             return manageFailure(getNextPlayer, "TurnController", "getNextPlayerTurn")
 
@@ -58,13 +63,9 @@ class ChessGame (private val board: Board,
         //TODO: special movement strategy new is needed
         return MovementSuccessful(
             ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
-            pieceMovementStrategy, specialMovementsController, winningCondition)
+                pieceMovementStrategy, specialMovementsController, winningCondition)
         )
     }
-
-    override fun getActualPlayer(): Player = actualPlayer
-
-    override fun getBoard(): Board = board
 
     private fun <T>manageFailure(result: Result<T>,obj: String, action: String): MovementFailed {
         val exception: Throwable? = result.exceptionOrNull()

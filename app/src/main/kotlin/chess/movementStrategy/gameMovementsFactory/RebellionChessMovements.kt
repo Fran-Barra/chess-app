@@ -9,7 +9,7 @@ object RebellionChessMovements: GameMovementsFactory {
         val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
         movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
         movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
-        movementStrategies[2] = PrincessMovementStrategy.getMovementStrategy()
+        movementStrategies[6] = PrincessMovementStrategy.getMovementStrategy()
         movementStrategies[3] = KnightMovementStrategy.getMovementStrategy()
         movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
         movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()

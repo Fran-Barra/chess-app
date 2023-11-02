@@ -11,6 +11,7 @@ class FromPieceTypeToString: GetPieceFromTypeInStringFormat {
             3 -> "knight"
             4 -> "rook"
             5 -> "pawn"
+            6 -> "archbishop"
             else -> "ghost"
         }
     }

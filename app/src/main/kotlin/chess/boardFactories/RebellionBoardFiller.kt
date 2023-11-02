@@ -20,8 +20,8 @@ class RebellionBoardFiller: BoardFiller {
         fillerBoard = fillerBoard.addPiece(BasicPiece(1, color), Vector(xLeftestValue+1, yLowerRow))
 
         //princesses
-        fillerBoard = fillerBoard.addPiece(BasicPiece(2, color), Vector(xLeftestValue+2, yLowerRow-1))
-        fillerBoard = fillerBoard.addPiece(BasicPiece(2, color), Vector(xLeftestValue+1, yLowerRow-1))
+        fillerBoard = fillerBoard.addPiece(BasicPiece(6, color), Vector(xLeftestValue+2, yLowerRow-1))
+        fillerBoard = fillerBoard.addPiece(BasicPiece(6, color), Vector(xLeftestValue+1, yLowerRow-1))
 
         //knights
         fillerBoard = fillerBoard.addPiece(BasicPiece(3, color), Vector(xLeftestValue, yLowerRow))
