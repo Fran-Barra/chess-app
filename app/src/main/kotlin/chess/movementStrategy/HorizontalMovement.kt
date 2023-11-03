@@ -1,5 +1,6 @@
 package chess.movementStrategy
 
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementStrategy
@@ -27,7 +28,7 @@ object HorizontalMovement: MovementStrategy {
 
     private fun checkIfPieceBetweenXMinAndXMax(xMin: Int, xMax: Int, y: Int, board: Board): Boolean{
         for (x in xMin+1 until xMax)
-            if (board.getPieceInPosition(Vector(x, y)).isSuccess)
+            if (board.getPieceInPosition(Vector(x, y)) is SuccessfulOutcome)
                 return true
         return false
     }

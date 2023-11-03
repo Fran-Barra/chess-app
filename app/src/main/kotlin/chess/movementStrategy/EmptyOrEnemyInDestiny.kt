@@ -1,5 +1,7 @@
 package chess.movementStrategy
 
+import FailedOutcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementStrategy
@@ -11,7 +13,9 @@ object EmptyOrEatEnemyInDestiny: MovementStrategy {
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector,
                                board: Board
     ): Boolean {
-        if (board.getPieceInPosition(destination).isFailure) return true
-        return canEat(actual, destination, board, pieceEatingRuler)
+        return when (board.getPieceInPosition(destination)) {
+            is SuccessfulOutcome -> canEat(actual, destination, board, pieceEatingRuler)
+            is FailedOutcome -> true
+        }
     }
 }
