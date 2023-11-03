@@ -19,9 +19,10 @@ class CheckmateWinningCondition: WinningConditionStrategy {
                                         specialMovementsController: SpecialMovementController
     ): Result<Boolean> {
 
-        val pieceToCheck: Piece = findPieceToCheck()
+        val pieceToCheckR: Result<Piece> = findPieceToCheck(board, actualPlayer, 0)
+        if (pieceToCheckR.isFailure) return Result.failure(pieceToCheckR.exceptionOrNull()!!)
         return isCheckMate(
-            pieceToCheck, actualPlayer, board, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
+            pieceToCheckR.getOrNull()!!, actualPlayer, board, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
         )
     }
 
@@ -140,8 +141,14 @@ class CheckmateWinningCondition: WinningConditionStrategy {
         return isPieceInCheck(checkedPiece, toEvaluateBoard, actualPlayer, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
     }
 
-    private fun findPieceToCheck(): Piece {
-        TODO("Not implemented")
+    //TODO: improve this
+    private fun findPieceToCheck(board: Board, actualPlayer: Player, pieceType: Int): Result<Piece> {
+        for ((piece: Piece, _) in board.getPiecesAndPosition()){
+            if (piece.getPieceType() != pieceType) continue
+            if (!actualPlayer.playerControlColor(piece.getPieceColor())) continue
+            return Result.success(piece)
+        }
+        return Result.failure(Exception("No matching piece found"))
     }
 
     private fun findPiecePosition(piece: Piece, board: Board): Result<Vector> {
