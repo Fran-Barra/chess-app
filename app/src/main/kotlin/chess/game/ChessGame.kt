@@ -1,5 +1,8 @@
 package chess.game
 
+import FailedOutcome
+import Outcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.game.*
@@ -22,9 +25,10 @@ class ChessGame (private val board: Board,
     override fun makeMovement(player: Player, origin: Vector, destination: Vector): GameMovementResult {
         if (player != actualPlayer) return MovementFailed("Is not the player turn")
 
-        val pieceR: Result<Piece> = board.getPieceInPosition(origin)
-        if (pieceR.isFailure) return manageFailure(pieceR, "board", "get boardGame.piece in position")
-        val piece: Piece = pieceR.getOrNull()!!
+        val piece: Piece = when (val outcome = board.getPieceInPosition(origin)) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
 
         if (!player.playerControlColor(piece.getPieceColor()))
             return MovementFailed("This color is not controlled by the actual player")

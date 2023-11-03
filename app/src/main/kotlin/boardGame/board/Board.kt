@@ -1,5 +1,6 @@
 package boardGame.board
 
+import Outcome
 import boardGame.piece.Piece
 
 interface Board {
@@ -13,7 +14,7 @@ interface Board {
     fun removePiece(piece: Piece): Board
 
     /**Returns the piece in the position, if not found it returns null*/
-    fun getPieceInPosition(position: Vector): Result<Piece>
+    fun getPieceInPosition(position: Vector): Outcome<Piece>
 
     /**Returns true if the position exists and false if not*/
     fun positionExists(position: Vector): Boolean
