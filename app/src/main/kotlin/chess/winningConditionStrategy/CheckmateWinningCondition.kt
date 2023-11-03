@@ -58,8 +58,12 @@ class CheckmateWinningCondition: WinningConditionStrategy {
 
         val strategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return Result.success(false)
 
+        val pieceToCheckPosR: Result<Vector> = findPiecePosition(piece, board)
+        if (pieceToCheckPosR.isFailure) return Result.failure(pieceToCheckPosR.exceptionOrNull()!!)
+        val pieceToCheckPos: Vector = pieceToCheckPosR.getOrNull()!!
+
         for ((position, _) in board.getBoardAssList()) {
-            if (strategy.checkMovement(pieceEatingRuler, player, findPiecePosition(), position, board)) {
+            if (strategy.checkMovement(pieceEatingRuler, player, pieceToCheckPos, position, board)) {
                 val isStillInCheckResult: Result<Boolean> = performMovementAndEvaluateIfInCheck(board, piece, position,
                     player, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
 
@@ -106,9 +110,13 @@ class CheckmateWinningCondition: WinningConditionStrategy {
     ): Result<Boolean> {
         val strategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return Result.success(false)
 
+        val pieceToCheckPosR: Result<Vector> = findPiecePosition(piece, board)
+        if (pieceToCheckPosR.isFailure) return Result.failure(pieceToCheckPosR.exceptionOrNull()!!)
+        val pieceToCheckPos: Vector = pieceToCheckPosR.getOrNull()!!
+
         for ((position: Vector, _) in board.getBoardAssList()){
-            if (position == findPiecePosition()) continue
-            if (strategy.checkMovement(pieceEatingRuler, player, findPiecePosition(), position, board)) {
+            if (position == pieceToCheckPos) continue
+            if (strategy.checkMovement(pieceEatingRuler, player, pieceToCheckPos, position, board)) {
                 val isStillInCheckResult: Result<Boolean> = performMovementOfOtherPieceAndEvaluateIfInCheck(
                     board, piece, position, checkedPiece,
                     player, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
@@ -136,8 +144,13 @@ class CheckmateWinningCondition: WinningConditionStrategy {
         TODO("Not implemented")
     }
 
-    private fun findPiecePosition(): Vector {
-        TODO("Implement method")
+    private fun findPiecePosition(piece: Piece, board: Board): Result<Vector> {
+        val piecesPositions: List<Pair<Piece, Vector>> = board.getPiecesAndPosition()
+        for (piecePosition in piecesPositions) {
+            if (piece == piecePosition.first)
+                return Result.success(piecePosition.second)
+        }
+        return Result.failure(Exception("Piece position not found on board"))
     }
 }
 
