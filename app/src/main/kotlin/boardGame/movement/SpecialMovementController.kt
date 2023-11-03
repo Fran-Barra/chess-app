@@ -1,5 +1,6 @@
 package boardGame.movement
 
+import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.piece.Piece
@@ -15,7 +16,7 @@ interface SpecialMovementController {
     fun removePiece(piece: Piece) : SpecialMovementController
     fun checkMovement(eatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                       destination: Vector, board: Board
-    ) : Result<SpecialMovement>
+    ) : Outcome<SpecialMovement>
 
 }
 

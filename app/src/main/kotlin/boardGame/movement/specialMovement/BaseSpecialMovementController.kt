@@ -1,5 +1,8 @@
 package boardGame.movement.specialMovement
 
+import FailedOutcome
+import Outcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.GameEvent
@@ -28,22 +31,21 @@ class BaseSpecialMovementController(
 
     override fun checkMovement(eatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                                destination: Vector, board: Board
-    ): Result<SpecialMovement> {
-        val pieceR: Result<Piece> = board.getPieceInPosition(actual)
-        if (pieceR.isFailure) return exceptionHandler(pieceR, "board", "get boardGame.piece in position")
-        val piece: Piece = pieceR.getOrNull()!!
+    ): Outcome<SpecialMovement> {
+        val piece: Piece = when (val outcome = board.getPieceInPosition(actual)) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return FailedOutcome(outcome.error)
+        }
 
         if (!pieceMovements.containsKey(piece))
-            return Result.failure(Exception("There are no specified movements for this boardGame.piece"))
+            return FailedOutcome("There are no specified movements for this boardGame.piece")
 
         val pairR: List<Pair<List<GameEvent>, SpecialMovement>> = pieceMovements[piece]
-            ?: return Result.failure(Exception("There are no specified movements for this boardGame.piece"))
+            ?: return FailedOutcome("There are no specified movements for this boardGame.piece")
         if (pairR.isEmpty())
-            return Result.failure(Exception("There are no specified movements for this boardGame.piece"))
+            return FailedOutcome("There are no specified movements for this boardGame.piece")
 
-        throw NotImplementedError()
-        //for (pair in pairR) {
-        //pair.second.
-        //}
+        TODO("Not implemented")
+        for (pair in pairR) { }
     }
 }
