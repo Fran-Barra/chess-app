@@ -1,12 +1,15 @@
 package boardGame.turnsController
 
+import FailedOutcome
+import Outcome
+import SuccessfulOutcome
 import boardGame.player.Player
 
 class CircleTurnController(private val circle: List<Player>, private var turn: Int): TurnsController {
-    override fun getNextPlayerTurn(): Result<Pair<Player, TurnsController>> {
-        if (circle.isEmpty()) return Result.failure(Exception("No players found"))
+    override fun getNextPlayerTurn(): Outcome<Pair<Player, TurnsController>> {
+        if (circle.isEmpty()) return FailedOutcome("No players found")
         if (turn >= circle.size) turn = 0
-        return Result.success(Pair(circle.get(turn), CircleTurnController(circle, turn+1)))
+        return SuccessfulOutcome(Pair(circle[turn], CircleTurnController(circle, turn+1)))
     }
 
     override fun addPlayer(player: Player): TurnsController {

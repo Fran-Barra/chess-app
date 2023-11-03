@@ -52,13 +52,13 @@ class ChessGame (private val board: Board,
 
         if (wonR.getOrNull()!!) return PlayerWon(actualPlayer)
 
-        val getNextPlayer: Result<Pair<Player, TurnsController>> = turnsController.getNextPlayerTurn()
+        val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
 
-        if (getNextPlayer.isFailure)
-            return manageFailure(getNextPlayer, "TurnController", "getNextPlayerTurn")
-
-        val nextPlayer: Player = getNextPlayer.getOrNull()?.first!!
-        val newTurnsControllerStatus: TurnsController = getNextPlayer.getOrNull()?.second!!
+        val nextPlayer: Player = getNextPlayer.first
+        val newTurnsControllerStatus: TurnsController = getNextPlayer.second
         //TODO: special movement strategy new is needed
         return MovementSuccessful(
             ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
