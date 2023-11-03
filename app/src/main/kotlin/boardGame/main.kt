@@ -7,6 +7,7 @@ import chess.game.gameFactory.RebellionChessFactory
 import javafx.application.Application
 
 fun main() {
+    //TODO: change all Result<T> to my own result
     Application.launch(BoardGame::class.java)
 }
 

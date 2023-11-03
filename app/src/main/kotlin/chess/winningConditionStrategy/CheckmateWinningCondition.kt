@@ -12,6 +12,7 @@ import boardGame.turnsController.TurnsController
 
 
 //TODO: clean up code
+//TODO: Also consider that a player can control multiple colors
 class CheckmateWinningCondition: WinningConditionStrategy {
     override fun checkWinningConditions(board: Board, actualPlayer: Player, turnsController: TurnsController,
                                         pieceEatingRuler: PieceEatingRuler, pieceMovementStrategy: Map<Int, MovementStrategy>,
@@ -19,115 +20,116 @@ class CheckmateWinningCondition: WinningConditionStrategy {
     ): Result<Boolean> {
 
         val pieceToCheck: Piece = findPieceToCheck()
-        val pieces: List<Pair<Piece, Vector>> = board.getPiecesAndPosition()
-        val boarPositionNotAvailable: Map<Vector, Boolean> =
-            findNotAvailablePosition(pieceToCheck, pieces, buildMarkedBoard(board),
-                board, pieceMovementStrategy, specialMovementsController, pieceEatingRuler, actualPlayer)
-
-        return Result.success(isCheckMate(pieceToCheck, actualPlayer, boarPositionNotAvailable, board,
-            pieceEatingRuler, pieceMovementStrategy, specialMovementsController))
+        return isCheckMate(
+            pieceToCheck, actualPlayer, board, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
+        )
     }
 
-    private fun isCheckMate(piece: Piece, player: Player, markedBoard: Map<Vector, Boolean>,
+    private fun isCheckMate(piece: Piece, player: Player,
                             board: Board,
                             pieceEatingRuler: PieceEatingRuler,
                             pieceMovementStrategy: Map<Int, MovementStrategy>,
                             specialMovementsController: SpecialMovementController
-    ): Boolean {
+    ): Result<Boolean> {
 
-        if (!isCheckPieceInCheck(markedBoard)) return false
+        val isInCheckResult: Result<Boolean> = isPieceInCheck(piece, board, player,
+            pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
+        if (isInCheckResult.isFailure) return isInCheckResult
+        if (!isInCheckResult.getOrNull()!!) return isInCheckResult
 
-        if (canCheckPieceMoveToNotCheck(piece, player, markedBoard, board, pieceEatingRuler, pieceMovementStrategy,
-                specialMovementsController)) return false
+        val canPieceMoveToNoCheckResult: Result<Boolean> = canCheckPieceMoveToNotCheck(piece, player, board,
+            pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
+        if (canPieceMoveToNoCheckResult.isFailure) return canPieceMoveToNoCheckResult
+        if (canPieceMoveToNoCheckResult.getOrNull()!!) return Result.success(false)
 
-        if (canAnotherPieceSaveTheCheckPieceFromCheck()) return false
-        return true
+        return canAnotherPieceSaveTheCheckPieceFromCheck(board, piece, player, pieceEatingRuler, pieceMovementStrategy,
+        specialMovementsController)
     }
 
-    private fun isCheckPieceInCheck(markedBoard: Map<Vector, Boolean>): Boolean{
-       return markedBoard[findPiecePosition()] ?: false
-    }
+
 
     //TODO("Consider special movements")
-    private fun canCheckPieceMoveToNotCheck(piece: Piece, player: Player, markedBoard: Map<Vector, Boolean>,
+    private fun canCheckPieceMoveToNotCheck(piece: Piece, player: Player,
                                             board: Board,
                                             pieceEatingRuler: PieceEatingRuler,
                                             pieceMovementStrategy: Map<Int, MovementStrategy>,
                                             specialMovementsController: SpecialMovementController
-    ): Boolean{
+    ): Result<Boolean> {
 
-        val strategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return false
+        val strategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return Result.success(false)
 
-        for (position in markedBoard) {
-            if (strategy.checkMovement(pieceEatingRuler, player, findPiecePosition(), position.key, board))
-                return true
-        }
-        return false
-    }
+        for ((position, _) in board.getBoardAssList()) {
+            if (strategy.checkMovement(pieceEatingRuler, player, findPiecePosition(), position, board)) {
+                val isStillInCheckResult: Result<Boolean> = performMovementAndEvaluateIfInCheck(board, piece, position,
+                    player, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
 
-    private fun canAnotherPieceSaveTheCheckPieceFromCheck(): Boolean {
-        TODO("Implement this shit")
-    }
-
-    private fun findNotAvailablePosition(pieceToCheck: Piece,
-                                         pieces: List<Pair<Piece, Vector>>,
-                                         markedBoard: Map<Vector, Boolean>,
-                                         board: Board,
-                                         pieceMovementStrategy: Map<Int, MovementStrategy>,
-                                         specialMovementsController: SpecialMovementController,
-                                         pieceEatingRuler: PieceEatingRuler,
-                                         actualPlayer: Player
-    ):
-            Map<Vector, Boolean>{
-
-        var markedBoarAux: MutableMap<Vector, Boolean> = markedBoard.toMutableMap()
-        for (piece in pieces) {
-            if (pieceToCheck == piece) continue
-            markedBoarAux = pieceBlockPosition(piece, markedBoarAux, board, pieceMovementStrategy,
-                specialMovementsController, pieceEatingRuler, actualPlayer)
-        }
-        return markedBoarAux
-    }
-
-    //TODO("consider special movements")
-    //TODO("move pieces of the other player")
-    private fun pieceBlockPosition(piecePair: Pair<Piece, Vector>,
-                                   markedBoard: MutableMap<Vector, Boolean>,
-                                   board: Board,
-                                   pieceMovementStrategy: Map<Int, MovementStrategy>,
-                                   specialMovementsController: SpecialMovementController,
-                                   pieceEatingRuler: PieceEatingRuler,
-                                   actualPlayer: Player
-    ):
-            MutableMap<Vector, Boolean> {
-
-        val markedBoarAux: MutableMap<Vector, Boolean> = markedBoard;
-        val piece: Piece = piecePair.first
-        if (!actualPlayer.playerControlColor(piece.getPieceColor())) return markedBoarAux
-
-        val movementStrategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return markedBoarAux
-
-        for (position in markedBoarAux) {
-            val previousValue: Boolean? = markedBoarAux[position.key]
-            if (previousValue == null) {
-                markedBoarAux[position.key] = movementStrategy
-                    .checkMovement(pieceEatingRuler, actualPlayer, piecePair.second, position.key, board)
-            }else{
-                if (previousValue) continue
-                markedBoarAux[position.key] = movementStrategy
-                    .checkMovement(pieceEatingRuler, actualPlayer, piecePair.second, position.key, board)
+                if (isStillInCheckResult.isFailure) return isStillInCheckResult
+                if (isStillInCheckResult.getOrNull()!!) continue
+                return Result.success(true)
             }
         }
-
-        return markedBoarAux
-
+        return Result.success(false)
     }
 
-    private fun buildMarkedBoard(board: Board) : Map<Vector, Boolean>{
-        val boardList: List<Pair<Vector, Piece?>> = board.getBoardAssList()
-        val mutableMap: MutableMap<Vector, Boolean> = mutableMapOf()
-        boardList.forEach{(v, p) -> mutableMap[v] = (p != null)}
-        return mutableMap
+    private fun performMovementAndEvaluateIfInCheck(board: Board, piece: Piece, destiny: Vector, actualPlayer: Player,
+                                           pieceEatingRuler: PieceEatingRuler,
+                                           pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                           specialMovementsController: SpecialMovementController
+    ): Result<Boolean> {
+        val toEvaluateBoard: Board = board.movePiece(piece, destiny)
+        return isPieceInCheck(piece, toEvaluateBoard, actualPlayer, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
+    }
+
+    private fun canAnotherPieceSaveTheCheckPieceFromCheck(board: Board, checkedPiece: Piece, player: Player,
+                                                          pieceEatingRuler: PieceEatingRuler,
+                                                          pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                                          specialMovementsController: SpecialMovementController
+    ): Result<Boolean> {
+        for ((piece: Piece, _) in board.getPiecesAndPosition()){
+            if (piece.getPieceColor() != checkedPiece.getPieceColor() || piece == checkedPiece) continue
+            val canThisPieceSaveResult: Result<Boolean> = canThisPieceSaveTheCheckPiece(board, piece, checkedPiece,
+                player, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
+            )
+
+            if (canThisPieceSaveResult.isFailure) return canThisPieceSaveResult
+            if (!canThisPieceSaveResult.getOrNull()!!) continue
+            return Result.success(true)
+        }
+        return Result.success(false)
+    }
+
+    //TODO("Consider special movements")
+    private fun canThisPieceSaveTheCheckPiece(board: Board, piece: Piece, checkedPiece: Piece, player: Player,
+                                              pieceEatingRuler: PieceEatingRuler,
+                                              pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                              specialMovementsController: SpecialMovementController
+    ): Result<Boolean> {
+        val strategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()] ?: return Result.success(false)
+
+        for ((position: Vector, _) in board.getBoardAssList()){
+            if (position == findPiecePosition()) continue
+            if (strategy.checkMovement(pieceEatingRuler, player, findPiecePosition(), position, board)) {
+                val isStillInCheckResult: Result<Boolean> = performMovementOfOtherPieceAndEvaluateIfInCheck(
+                    board, piece, position, checkedPiece,
+                    player, pieceEatingRuler, pieceMovementStrategy, specialMovementsController
+                )
+
+                if (isStillInCheckResult.isFailure) return isStillInCheckResult
+                if (isStillInCheckResult.getOrNull()!!) continue
+                return Result.success(true)
+            }
+        }
+        return Result.success(false)
+    }
+
+    private fun performMovementOfOtherPieceAndEvaluateIfInCheck(board: Board, piece: Piece, destiny: Vector, checkedPiece: Piece,
+                                                       actualPlayer: Player,
+                                                        pieceEatingRuler: PieceEatingRuler,
+                                                        pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                                        specialMovementsController: SpecialMovementController
+    ): Result<Boolean> {
+        val toEvaluateBoard: Board = board.movePiece(piece, destiny)
+        return isPieceInCheck(checkedPiece, toEvaluateBoard, actualPlayer, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
     }
 
     private fun findPieceToCheck(): Piece {
