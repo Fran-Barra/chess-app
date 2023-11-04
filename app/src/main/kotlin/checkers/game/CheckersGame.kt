@@ -1,5 +1,7 @@
 package checkers.game
 
+import FailedOutcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.game.*
@@ -26,9 +28,10 @@ class CheckersGame(private val board: Board,
     override fun makeMovement(player: Player, origin: Vector, destination: Vector): GameMovementResult {
         if (player != actualPlayer) return MovementFailed("Is not the player turn")
 
-        val pieceR: Result<Piece> = board.getPieceInPosition(origin)
-        if (pieceR.isFailure) return manageFailure(pieceR, "board", "get boardGame.piece in position")
-        val piece: Piece = pieceR.getOrNull()!!
+        val piece: Piece = when (val outcome = board.getPieceInPosition(origin)) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
 
         if (!player.playerControlColor(piece.getPieceColor()))
             return MovementFailed("This color is not controlled by the actual player")
@@ -45,33 +48,27 @@ class CheckersGame(private val board: Board,
         val newBoard: Board = board.movePiece(piece, destination)
 
         //TODO: special movement strategy new is needed
-        val wonR: Result<Boolean> = winningCondition.checkWinningConditions(board, actualPlayer, turnsController,
-            pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
-        if (wonR.isFailure)
-            return manageFailure(wonR, "WinningConditionStrategy", "checkWinningConditions")
+        val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(board, actualPlayer, turnsController,
+            pieceEatingRuler, pieceMovementStrategy, specialMovementsController)) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
 
-        if (wonR.getOrNull()!!) return PlayerWon(actualPlayer)
+        if (won) return PlayerWon(actualPlayer)
 
-        val getNextPlayer: Result<Pair<Player, TurnsController>> = turnsController.getNextPlayerTurn()
+        val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
 
         //TODO: if MoveWith eat and it is posible to
-        if (getNextPlayer.isFailure)
-            return manageFailure(getNextPlayer, "TurnController", "getNextPlayerTurn")
 
-        val nextPlayer: Player = getNextPlayer.getOrNull()?.first!!
-        val newTurnsControllerStatus: TurnsController = getNextPlayer.getOrNull()?.second!!
+        val nextPlayer: Player = getNextPlayer.first
+        val newTurnsControllerStatus: TurnsController = getNextPlayer.second
         //TODO: special movement strategy new is needed
         return MovementSuccessful(
             ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
                 pieceMovementStrategy, specialMovementsController, winningCondition)
-        )
-    }
-
-    private fun <T>manageFailure(result: Result<T>,obj: String, action: String): MovementFailed {
-        val exception: Throwable? = result.exceptionOrNull()
-        return MovementFailed(
-            if (exception != null) { exception.message!!}
-            else {"A not specified error happened within the $obj performing the action: $action"}
         )
     }
 }

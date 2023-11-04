@@ -1,5 +1,6 @@
 package boardGame.winningConditionStrategy
 
+import Outcome
 import boardGame.board.Board
 import boardGame.movement.MovementStrategy
 import boardGame.movement.SpecialMovementController
@@ -11,5 +12,5 @@ interface WinningConditionStrategy {
     fun checkWinningConditions(board: Board, actualPlayer: Player, turnsController: TurnsController, pieceEatingRuler: PieceEatingRuler,
                                pieceMovementStrategy: Map<Int, MovementStrategy>,
                                specialMovementsController: SpecialMovementController
-    ): Result<Boolean>
+    ): Outcome<Boolean>
 }

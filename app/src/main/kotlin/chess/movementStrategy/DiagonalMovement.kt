@@ -1,5 +1,7 @@
 package chess.movementStrategy
 
+import FailedOutcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementStrategy
@@ -21,8 +23,10 @@ object DiagonalMovement: MovementStrategy {
         val xDir = if (origin.x < destiny.x) 1 else -1
         val yDir = if (origin.y < destiny.y) 1 else -1
         for (i in 1 until abs(origin.x-destiny.x))
-            if (board.getPieceInPosition(Vector(i*xDir + origin.x, i*yDir + origin.y)).isSuccess)
-                return false
+            when (board.getPieceInPosition(Vector(i*xDir + origin.x, i*yDir + origin.y))) {
+                is SuccessfulOutcome -> return false
+                is FailedOutcome -> continue
+            }
         return true
     }
 }
