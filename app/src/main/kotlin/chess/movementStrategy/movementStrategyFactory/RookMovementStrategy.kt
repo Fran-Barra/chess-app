@@ -1,20 +1,20 @@
 package chess.movementStrategy.movementStrategyFactory
 
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
 import chess.movementStrategy.EmptyOrEatEnemyInDestiny
 import chess.movementStrategy.HorizontalMovement
 import chess.movementStrategy.VerticalMovement
-import boardGame.movement.unionMovement.AndUnionMovement
-import boardGame.movement.unionMovement.OrUnionMovement
+import boardGame.movement.unionMovement.AndUnionMovementValidator
+import boardGame.movement.unionMovement.OrUnionMovementValidator
 
 //TODO: consider making the factories actual strategies
 object RookMovementStrategy: MovementStrategyFactory {
-    private val strategy: MovementStrategy by lazy {
-        AndUnionMovement(listOf(EmptyOrEatEnemyInDestiny, OrUnionMovement(listOf(HorizontalMovement, VerticalMovement))))
+    private val strategy: MovementValidator by lazy {
+        AndUnionMovementValidator(listOf(EmptyOrEatEnemyInDestiny, OrUnionMovementValidator(listOf(HorizontalMovement, VerticalMovement))))
     }
 
-    override fun getMovementStrategy(): MovementStrategy {
+    override fun getMovementStrategy(): MovementValidator {
         return strategy
     }
 }

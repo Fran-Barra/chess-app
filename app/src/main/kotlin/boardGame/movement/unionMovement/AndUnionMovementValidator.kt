@@ -2,15 +2,15 @@ package boardGame.movement.unionMovement
 
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
-import boardGame.movement.UnionMovement
+import boardGame.movement.MovementValidator
+import boardGame.movement.UnionMovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
-class AndUnionMovement(private val strategies: Iterable<MovementStrategy>): UnionMovement {
+class AndUnionMovementValidator(private val strategies: Iterable<MovementValidator>): UnionMovementValidator {
 
-    override fun addStrategies(strategies: Iterable<MovementStrategy>): UnionMovement {
-        return AndUnionMovement(strategies.union(strategies))
+    override fun addStrategies(strategies: Iterable<MovementValidator>): UnionMovementValidator {
+        return AndUnionMovementValidator(strategies.union(strategies))
     }
 
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,

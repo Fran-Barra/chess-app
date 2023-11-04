@@ -1,12 +1,11 @@
 package chess.game
 
 import FailedOutcome
-import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.game.*
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.movement.SpecialMovementController
 import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.PieceEatingRuler
@@ -18,7 +17,7 @@ class ChessGame (private val board: Board,
                  private val actualPlayer: Player,
                  private val turnsController: TurnsController,
                  private val pieceEatingRuler: PieceEatingRuler,
-                 private val pieceMovementStrategy: Map<Int, MovementStrategy>,
+                 private val pieceMovementValidator: Map<Int, MovementValidator>,
                  private val specialMovementsController: SpecialMovementController,
                  private val winningCondition: WinningConditionStrategy
     ): Game {
@@ -36,17 +35,17 @@ class ChessGame (private val board: Board,
         //TODO("Integrate special movements")
         //specialMovementsController.checkMovement(boardGame.pieceEatingRuler, player, origin, destination, board)
 
-        val movementStrategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()]
+        val movementValidator: MovementValidator = pieceMovementValidator[piece.getPieceType()]
             ?: return MovementFailed("Piece type don't match with the rules of the chess.game")
 
-        if (!movementStrategy.checkMovement(pieceEatingRuler, player, origin, destination, board))
+        if (!movementValidator.checkMovement(pieceEatingRuler, player, origin, destination, board))
             return MovementFailed("Movement is not valid for this boardGame.piece")
 
         val newBoard: Board = board.movePiece(piece, destination)
 
         //TODO: special movement strategy new is needed
         val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(newBoard, actualPlayer,
-            turnsController, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)) {
+            turnsController, pieceEatingRuler, pieceMovementValidator, specialMovementsController)) {
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return MovementFailed(outcome.error)
         }
@@ -62,7 +61,7 @@ class ChessGame (private val board: Board,
         //TODO: special movement strategy new is needed
         return MovementSuccessful(
             ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
-            pieceMovementStrategy, specialMovementsController, winningCondition)
+            pieceMovementValidator, specialMovementsController, winningCondition)
         )
     }
 

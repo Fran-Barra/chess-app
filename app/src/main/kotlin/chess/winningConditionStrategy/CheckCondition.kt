@@ -5,7 +5,7 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.movement.SpecialMovementController
 import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.PieceEatingRuler
@@ -17,7 +17,7 @@ fun isPieceInCheck(
     board: Board,
     actualPlayer: Player,
     pieceEatingRuler: PieceEatingRuler,
-    pieceMovementStrategy: Map<Int, MovementStrategy>,
+    pieceMovementValidator: Map<Int, MovementValidator>,
     specialMovementsController: SpecialMovementController
 ): Outcome<Boolean> {
 
@@ -28,7 +28,7 @@ fun isPieceInCheck(
     }
 
     return SuccessfulOutcome(isPositionOnCheck(piece, pieceToCheckPos, board, actualPlayer, pieceEatingRuler,
-        pieceMovementStrategy, specialMovementsController))
+        pieceMovementValidator, specialMovementsController))
 }
 
 private fun getPieceToCheckPosition(piece: Piece, board: Board): Outcome<Vector> {
@@ -46,7 +46,7 @@ private fun isPositionOnCheck(
     board: Board,
     actualPlayer: Player,
     pieceEatingRuler: PieceEatingRuler,
-    pieceMovementStrategy: Map<Int, MovementStrategy>,
+    pieceMovementValidator: Map<Int, MovementValidator>,
     specialMovementsController: SpecialMovementController
 ): Boolean {
     val piecesAbleToCheck: List<Pair<Piece, Vector>> = board.getPiecesAndPosition()
@@ -55,7 +55,7 @@ private fun isPositionOnCheck(
 
     for ((piece: Piece, pos: Vector) in piecesAbleToCheck){
         if (!canPieceMoveToToCheckPiecePosition(piece, pos, toCheckPiecePosition, board, actualPlayer, pieceEatingRuler,
-                pieceMovementStrategy, specialMovementsController)
+                pieceMovementValidator, specialMovementsController)
             ) continue
         return true
     }
@@ -67,11 +67,11 @@ private fun canPieceMoveToToCheckPiecePosition(piece: Piece, piecePosition: Vect
                                                board: Board,
                                                actualPlayer: Player,
                                                pieceEatingRuler: PieceEatingRuler,
-                                               pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                               pieceMovementValidator: Map<Int, MovementValidator>,
                                                specialMovementsController: SpecialMovementController
 ): Boolean {
-    val movementStrategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()]?: return false
+    val movementValidator: MovementValidator = pieceMovementValidator[piece.getPieceType()]?: return false
 
-    return movementStrategy.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
+    return movementValidator.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
 }
 

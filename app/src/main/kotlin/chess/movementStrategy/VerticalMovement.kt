@@ -3,11 +3,11 @@ package chess.movementStrategy
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
-object VerticalMovement: MovementStrategy {
+object VerticalMovement: MovementValidator {
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                                destination: Vector, board: Board
     ): Boolean {

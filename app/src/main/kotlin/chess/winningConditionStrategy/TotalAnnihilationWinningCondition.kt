@@ -4,7 +4,7 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.movement.SpecialMovementController
 import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.PieceEatingRuler
@@ -16,7 +16,7 @@ import boardGame.turnsController.TurnsController
 class TotalAnnihilationWinningCondition: WinningConditionStrategy {
     override fun checkWinningConditions(board: Board, actualPlayer: Player, turnsController: TurnsController,
                                         pieceEatingRuler: PieceEatingRuler,
-                                        pieceMovementStrategy: Map<Int, MovementStrategy>,
+                                        pieceMovementValidator: Map<Int, MovementValidator>,
                                         specialMovementsController: SpecialMovementController
     ): Outcome<Boolean> {
         return SuccessfulOutcome(getEnemyPieces(board.getPiecesAndPosition(), actualPlayer).isEmpty())

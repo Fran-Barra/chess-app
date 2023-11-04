@@ -1,12 +1,12 @@
 package chess.movementStrategy.gameMovementsFactory
 
 import boardGame.movement.GameMovementsFactory
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import chess.movementStrategy.movementStrategyFactory.*
 
 object BasicChessMovements: GameMovementsFactory {
-    override fun getMovementsStrategies(): Map<Int, MovementStrategy> {
-        val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
+    override fun getMovementsStrategies(): Map<Int, MovementValidator> {
+        val movementStrategies: MutableMap<Int, MovementValidator> = mutableMapOf()
         movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
         movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
         movementStrategies[2] = BishopMovementStrategy.getMovementStrategy()

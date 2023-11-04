@@ -6,10 +6,8 @@ import boardGame.board.boardFactory.RectangularBoardBuilder
 import boardGame.game.GameFactory
 import boardGame.movement.GameEvent
 import chess.game.ChessGame
-import boardGame.movement.MovementStrategy
-import boardGame.movement.SpecialMovement
+import boardGame.movement.MovementValidator
 import chess.movementStrategy.gameMovementsFactory.BasicChessMovements
-import boardGame.movement.specialMovement.BaseSpecialMovementController
 import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
@@ -27,7 +25,7 @@ object BasicChessFactory: GameFactory {
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
         board = BaseBoardFiller().fillBoard(board)
 
-        val movementStrategies: Map<Int, MovementStrategy> = BasicChessMovements.getMovementsStrategies()
+        val movementStrategies: Map<Int, MovementValidator> = BasicChessMovements.getMovementsStrategies()
 
         //TODO: fill this
         val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()

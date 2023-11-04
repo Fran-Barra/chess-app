@@ -4,12 +4,12 @@ import FailedOutcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import kotlin.math.abs
 
-object DiagonalMovement: MovementStrategy {
+object DiagonalMovement: MovementValidator {
     override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                                destination: Vector, board: Board
     ): Boolean {
