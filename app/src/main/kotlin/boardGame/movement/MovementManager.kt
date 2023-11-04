@@ -3,7 +3,6 @@ package boardGame.movement
 import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.unionMovement.MovementPerformer
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 

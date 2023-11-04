@@ -1,4 +1,4 @@
-package boardGame.movement.unionMovement
+package boardGame.movement
 
 import Outcome
 import boardGame.board.Board
