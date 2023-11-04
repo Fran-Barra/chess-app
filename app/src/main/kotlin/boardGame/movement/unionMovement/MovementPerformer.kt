@@ -1,11 +1,12 @@
 package boardGame.movement.unionMovement
 
+import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.piece.Piece
 
 interface MovementPerformer {
-    fun performMovement(piecePosition: Vector, too: Vector, board: Board): MovementResult
+    fun performMovement(piecePosition: Vector, too: Vector, board: Board): Outcome<MovementResult>
 }
 
 data class MovementResult(val newBoard: Board, val movementEvents: List<MovementEvent>)
