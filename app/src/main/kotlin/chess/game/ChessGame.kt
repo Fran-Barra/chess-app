@@ -45,12 +45,12 @@ class ChessGame (private val board: Board,
         val newBoard: Board = board.movePiece(piece, destination)
 
         //TODO: special movement strategy new is needed
-        val wonR: Result<Boolean> = winningCondition.checkWinningConditions(newBoard, actualPlayer, turnsController,
-            pieceEatingRuler, pieceMovementStrategy, specialMovementsController)
-        if (wonR.isFailure)
-            return manageFailure(wonR, "WinningConditionStrategy", "checkWinningConditions")
-
-        if (wonR.getOrNull()!!) return PlayerWon(actualPlayer)
+        val wonR: Boolean = when (val outcome = winningCondition.checkWinningConditions(newBoard, actualPlayer,
+            turnsController, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return MovementFailed(outcome.error)
+        }
+        if (wonR) return PlayerWon(actualPlayer)
 
         val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
             is SuccessfulOutcome -> outcome.data

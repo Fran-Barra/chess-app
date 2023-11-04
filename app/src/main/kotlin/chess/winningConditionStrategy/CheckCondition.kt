@@ -1,5 +1,8 @@
 package chess.winningConditionStrategy
 
+import FailedOutcome
+import Outcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementStrategy
@@ -16,23 +19,25 @@ fun isPieceInCheck(
     pieceEatingRuler: PieceEatingRuler,
     pieceMovementStrategy: Map<Int, MovementStrategy>,
     specialMovementsController: SpecialMovementController
-): Result<Boolean> {
+): Outcome<Boolean> {
 
 
-    val pieceToCheckPos: Result<Vector> = getPieceToCheckPosition(piece, board)
-    if (pieceToCheckPos.isFailure) return Result.failure(pieceToCheckPos.exceptionOrNull()!!)
+    val pieceToCheckPos: Vector = when (val outcome = getPieceToCheckPosition(piece, board)) {
+        is SuccessfulOutcome -> outcome.data
+        is FailedOutcome -> return FailedOutcome(outcome.error)
+    }
 
-    return Result.success(isPositionOnCheck(piece, pieceToCheckPos.getOrNull()!!, board, actualPlayer, pieceEatingRuler,
+    return SuccessfulOutcome(isPositionOnCheck(piece, pieceToCheckPos, board, actualPlayer, pieceEatingRuler,
         pieceMovementStrategy, specialMovementsController))
 }
 
-private fun getPieceToCheckPosition(piece: Piece, board: Board): Result<Vector> {
+private fun getPieceToCheckPosition(piece: Piece, board: Board): Outcome<Vector> {
     val piecesPositions: List<Pair<Piece, Vector>> = board.getPiecesAndPosition()
     for (piecePosition in piecesPositions) {
         if (piece == piecePosition.first)
-            return Result.success(piecePosition.second)
+            return SuccessfulOutcome(piecePosition.second)
     }
-    return Result.failure(Exception("Piece position not found on board"))
+    return FailedOutcome("Piece position not found on board")
 }
 
 private fun isPositionOnCheck(
@@ -67,6 +72,6 @@ private fun canPieceMoveToToCheckPiecePosition(piece: Piece, piecePosition: Vect
 ): Boolean {
     val movementStrategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()]?: return false
 
-    return movementStrategy.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board);
+    return movementStrategy.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
 }
 
