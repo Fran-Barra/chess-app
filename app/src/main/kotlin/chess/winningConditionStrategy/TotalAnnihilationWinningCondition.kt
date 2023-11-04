@@ -1,5 +1,7 @@
 package chess.winningConditionStrategy
 
+import Outcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementStrategy
@@ -16,8 +18,8 @@ class TotalAnnihilationWinningCondition: WinningConditionStrategy {
                                         pieceEatingRuler: PieceEatingRuler,
                                         pieceMovementStrategy: Map<Int, MovementStrategy>,
                                         specialMovementsController: SpecialMovementController
-    ): Result<Boolean> {
-        return Result.success(getEnemyPieces(board.getPiecesAndPosition(), actualPlayer).isEmpty())
+    ): Outcome<Boolean> {
+        return SuccessfulOutcome(getEnemyPieces(board.getPiecesAndPosition(), actualPlayer).isEmpty())
     }
 
     private fun getEnemyPieces(pieces: List<Pair<Piece, Vector>>, actualPlayer: Player): List<Piece> {

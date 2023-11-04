@@ -1,5 +1,8 @@
 package boardGame.board
 
+import FailedOutcome
+import Outcome
+import SuccessfulOutcome
 import boardGame.piece.Piece
 import java.util.NoSuchElementException
 
@@ -8,8 +11,7 @@ class MapBoard(val board: Map<Vector, Piece?>): Board {
     override fun movePiece(piece: Piece, destination: Vector): Board {
         val updatedPieceMap = board.toMutableMap()
 
-        val currentPosition = board.entries.find { it.value == piece }?.key
-        if (currentPosition == null) return this
+        val currentPosition = board.entries.find { it.value == piece }?.key?: return this
 
         updatedPieceMap[currentPosition] = null
         updatedPieceMap[destination] = piece
@@ -31,16 +33,13 @@ class MapBoard(val board: Map<Vector, Piece?>): Board {
         return MapBoard(updatedPieceMap)
     }
 
-    override fun getPieceInPosition(position: Vector): Result<Piece> {
+    override fun getPieceInPosition(position: Vector): Outcome<Piece> {
         return if (board.containsKey(position)) {
             val piece = board[position]
-            if (piece != null) {
-                Result.success(piece)
-            } else {
-                Result.failure(NoSuchElementException("No boardGame.piece found in position $position"))
-            }
+            if (piece != null) {SuccessfulOutcome(piece)}
+            else {FailedOutcome("No boardGame.piece found in position $position")}
         } else {
-            Result.failure(IllegalArgumentException("Key $position does not exist in the map"))
+            FailedOutcome("Key $position does not exist in the map")
         }
     }
 
