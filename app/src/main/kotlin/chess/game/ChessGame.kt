@@ -45,12 +45,12 @@ class ChessGame (private val board: Board,
         val newBoard: Board = board.movePiece(piece, destination)
 
         //TODO: special movement strategy new is needed
-        val wonR: Boolean = when (val outcome = winningCondition.checkWinningConditions(newBoard, actualPlayer,
+        val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(newBoard, actualPlayer,
             turnsController, pieceEatingRuler, pieceMovementStrategy, specialMovementsController)) {
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return MovementFailed(outcome.error)
         }
-        if (wonR) return PlayerWon(actualPlayer)
+        if (won) return PlayerWon(actualPlayer)
 
         val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
             is SuccessfulOutcome -> outcome.data
@@ -67,14 +67,5 @@ class ChessGame (private val board: Board,
     }
 
     override fun getActualPlayer(): Player = actualPlayer
-
     override fun getBoard(): Board = board
-
-    private fun <T>manageFailure(result: Result<T>,obj: String, action: String): MovementFailed {
-        val exception: Throwable? = result.exceptionOrNull()
-        return MovementFailed(
-            if (exception != null) { exception.message!!}
-            else {"A not specified error happened within the $obj performing the action: $action"}
-        )
-    }
 }
