@@ -8,8 +8,8 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 class DistanceLimitMovement(val maxDistance: Int): MovementValidator {
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                               destination: Vector, board: Board
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
+                          destination: Vector, board: Board
     ): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
 

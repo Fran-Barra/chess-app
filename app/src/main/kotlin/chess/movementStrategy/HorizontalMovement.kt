@@ -8,8 +8,8 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 object HorizontalMovement: MovementValidator {
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                               destination: Vector, board: Board
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
+                          destination: Vector, board: Board
     ): Boolean {
         if (!isHorizontal(actual, destination)) return false
         return !checkIfPieceInMiddlePath(actual, destination, board)

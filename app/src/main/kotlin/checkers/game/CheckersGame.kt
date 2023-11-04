@@ -42,7 +42,7 @@ class CheckersGame(private val board: Board,
         val movementValidator: MovementValidator = pieceMovementValidator[piece.getPieceType()]
             ?: return MovementFailed("Piece type don't match with the rules of the chess.game")
 
-        if (!movementValidator.checkMovement(pieceEatingRuler, player, origin, destination, board))
+        if (!movementValidator.validate(pieceEatingRuler, player, origin, destination, board))
             return MovementFailed("Movement is not valid for this boardGame.piece")
 
         val newBoard: Board = board.movePiece(piece, destination)

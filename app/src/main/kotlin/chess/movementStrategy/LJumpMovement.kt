@@ -8,8 +8,8 @@ import boardGame.player.Player
 import kotlin.math.abs
 
 object LJumpMovement: MovementValidator {
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                               destination: Vector, board: Board
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
+                          destination: Vector, board: Board
     ): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
 

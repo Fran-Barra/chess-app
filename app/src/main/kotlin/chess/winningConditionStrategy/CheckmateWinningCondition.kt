@@ -74,7 +74,7 @@ class CheckmateWinningCondition: WinningConditionStrategy {
         }
 
         for ((position, _) in board.getBoardAssList()) {
-            if (!strategy.checkMovement(pieceEatingRuler, player, pieceToCheckPos, position, board)) continue
+            if (!strategy.validate(pieceEatingRuler, player, pieceToCheckPos, position, board)) continue
 
             val isStillInCheck: Boolean = when (val outcome = performMovementAndEvaluateIfInCheck(board, piece,
                 position, player, pieceEatingRuler, pieceMovementValidator, specialMovementsController)){
@@ -133,7 +133,7 @@ class CheckmateWinningCondition: WinningConditionStrategy {
 
         for ((position: Vector, _) in board.getBoardAssList()){
             if (position == pieceToCheckPos) continue
-            if (!strategy.checkMovement(pieceEatingRuler, player, pieceToCheckPos, position, board)) continue
+            if (!strategy.validate(pieceEatingRuler, player, pieceToCheckPos, position, board)) continue
 
             val isStillInCheck: Boolean = when (val outcome = performMovementOfOtherPieceAndEvaluateIfInCheck(
                 board, piece, position, checkedPiece, player,

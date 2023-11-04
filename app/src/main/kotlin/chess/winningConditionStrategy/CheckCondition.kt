@@ -72,6 +72,6 @@ private fun canPieceMoveToToCheckPiecePosition(piece: Piece, piecePosition: Vect
 ): Boolean {
     val movementValidator: MovementValidator = pieceMovementValidator[piece.getPieceType()]?: return false
 
-    return movementValidator.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
+    return movementValidator.validate(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
 }
 

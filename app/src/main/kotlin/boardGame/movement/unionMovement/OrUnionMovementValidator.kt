@@ -12,11 +12,11 @@ class OrUnionMovementValidator(private val strategies: Iterable<MovementValidato
         return AndUnionMovementValidator(strategies.union(strategies))
     }
 
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                               destination: Vector, board: Board
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
+                          destination: Vector, board: Board
     ): Boolean {
         for (movementStrategy in strategies)
-            if (movementStrategy.checkMovement(pieceEatingRuler, player, actual, destination, board))
+            if (movementStrategy.validate(pieceEatingRuler, player, actual, destination, board))
                 return true
         return false
     }

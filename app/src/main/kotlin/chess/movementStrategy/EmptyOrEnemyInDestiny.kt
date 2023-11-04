@@ -10,8 +10,8 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 object EmptyOrEatEnemyInDestiny: MovementValidator {
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector,
-                               board: Board
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector,
+                          board: Board
     ): Boolean {
         return when (board.getPieceInPosition(destination)) {
             is SuccessfulOutcome -> canEat(actual, destination, board, pieceEatingRuler)

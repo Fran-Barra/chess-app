@@ -6,7 +6,7 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 interface MovementValidator {
-    fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector,
-                      board: Board
+    fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector,
+                 board: Board
     ): Boolean
 }
