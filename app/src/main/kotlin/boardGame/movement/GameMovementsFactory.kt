@@ -1,5 +1,6 @@
 package boardGame.movement
 
 interface GameMovementsFactory {
-    fun getMovementsStrategies(): Map<Int, MovementValidator>
+    fun getMovementsManager(): MovementManager
+    fun getMovementsManagerController(): MovementManagerController
 }

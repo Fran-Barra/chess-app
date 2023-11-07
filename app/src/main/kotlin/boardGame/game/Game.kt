@@ -2,12 +2,22 @@ package boardGame.game
 
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.movement.MovementManager
+import boardGame.movement.MovementManagerController
+import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
+import boardGame.turnsController.TurnsController
+import boardGame.winningConditionStrategy.WinningConditionStrategy
 import chess.game.ChessGame
 
 interface Game {
     fun getActualPlayer(): Player
     fun getBoard(): Board
+    fun getMovementManager(): MovementManager
+    fun getMovementManagerController(): MovementManagerController
+    fun getPieceEatingRuler(): PieceEatingRuler
+    fun getTurnController(): TurnsController
+    fun getWinningConditions(): WinningConditionStrategy
     fun makeMovement(player: Player, origin: Vector, destination: Vector): GameMovementResult
 }
 

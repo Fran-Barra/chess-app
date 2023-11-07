@@ -4,16 +4,15 @@ import boardGame.board.Board
 import chess.boardFactories.BaseBoardFiller
 import boardGame.board.boardFactory.RectangularBoardBuilder
 import boardGame.game.GameFactory
-import boardGame.movement.GameEvent
+import boardGame.movement.MovementManager
+import boardGame.movement.MovementManagerController
 import chess.game.ChessGame
-import boardGame.movement.MovementValidator
 import chess.movementStrategy.gameMovementsFactory.BasicChessMovements
-import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
-import chess.winningConditionStrategy.TotalAnnihilationWinningCondition
+import chess.winningConditionStrategy.CheckmateWinningCondition
 
 object BasicChessFactory: GameFactory {
     override fun getGame(): ChessGame {
@@ -25,18 +24,16 @@ object BasicChessFactory: GameFactory {
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
         board = BaseBoardFiller().fillBoard(board)
 
-        val movementStrategies: Map<Int, MovementValidator> = BasicChessMovements.getMovementsStrategies()
-
-        //TODO: fill this
-        val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
+        val movements: MovementManager = BasicChessMovements.getMovementsManager()
+        val movementsController: MovementManagerController = BasicChessMovements.getMovementsManagerController()
 
         //TODO: change winning condition
         return ChessGame(board, players[0],
             CircleTurnController(players, 1),
             BasicEatingRuler(),
-            movementStrategies,
-            BaseSpecialMovementController(specialMovements),
-            TotalAnnihilationWinningCondition(),
+            movements,
+            movementsController,
+            CheckmateWinningCondition(),
         )
     }
 }
