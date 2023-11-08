@@ -7,7 +7,7 @@ import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.piece.Piece
 
-class FromTooMovementPerformer: MovementPerformer {
+object FromTooMovementPerformer: MovementPerformer {
     override fun performMovement(piecePosition: Vector, too: Vector, board: Board): Outcome<MovementResult> {
         val pieceToMove: Piece = when (val outcome = board.getPieceInPosition(piecePosition)) {
             is SuccessfulOutcome -> outcome.data
