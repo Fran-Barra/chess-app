@@ -3,7 +3,7 @@ package chess.movementStrategy.movementStrategyFactory
 import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
 import boardGame.movement.unionMovement.AndUnionMovementValidator
-import chess.movementStrategy.DistanceLimitMovement
+import chess.movementStrategy.validators.DistanceLimitMovement
 
 object PrincessMovementStrategy: MovementStrategyFactory {
     private val strategy: MovementValidator by lazy {

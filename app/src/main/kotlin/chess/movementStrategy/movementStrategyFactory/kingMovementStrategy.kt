@@ -2,7 +2,7 @@ package chess.movementStrategy.movementStrategyFactory
 
 import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
-import chess.movementStrategy.DistanceLimitMovement
+import chess.movementStrategy.validators.DistanceLimitMovement
 import boardGame.movement.unionMovement.AndUnionMovementValidator
 
 object KingMovementStrategy: MovementStrategyFactory {

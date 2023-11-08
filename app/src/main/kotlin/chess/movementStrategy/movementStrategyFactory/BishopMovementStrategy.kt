@@ -2,8 +2,8 @@ package chess.movementStrategy.movementStrategyFactory
 
 import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
-import chess.movementStrategy.DiagonalMovement
-import chess.movementStrategy.EmptyOrEatEnemyInDestiny
+import chess.movementStrategy.validators.DiagonalMovement
+import chess.movementStrategy.validators.EmptyOrEatEnemyInDestiny
 import boardGame.movement.unionMovement.AndUnionMovementValidator
 
 //TODO: consider making the factories actual strategies

@@ -2,9 +2,9 @@ package chess.movementStrategy.movementStrategyFactory
 
 import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
-import chess.movementStrategy.*
 import boardGame.movement.unionMovement.AndUnionMovementValidator
 import boardGame.movement.unionMovement.OrUnionMovementValidator
+import chess.movementStrategy.validators.*
 
 //TODO: consider making the factories actual strategies
 object PawnMovementStrategy: MovementStrategyFactory {

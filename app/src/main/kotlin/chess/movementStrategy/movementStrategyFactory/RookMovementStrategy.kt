@@ -2,9 +2,9 @@ package chess.movementStrategy.movementStrategyFactory
 
 import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
-import chess.movementStrategy.EmptyOrEatEnemyInDestiny
-import chess.movementStrategy.HorizontalMovement
-import chess.movementStrategy.VerticalMovement
+import chess.movementStrategy.validators.EmptyOrEatEnemyInDestiny
+import chess.movementStrategy.validators.HorizontalMovement
+import chess.movementStrategy.validators.VerticalMovement
 import boardGame.movement.unionMovement.AndUnionMovementValidator
 import boardGame.movement.unionMovement.OrUnionMovementValidator
 

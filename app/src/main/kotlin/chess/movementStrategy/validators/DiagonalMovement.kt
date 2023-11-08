@@ -1,4 +1,4 @@
-package chess.movementStrategy
+package chess.movementStrategy.validators
 
 import FailedOutcome
 import SuccessfulOutcome
