@@ -1,14 +1,15 @@
-package chess.game
+package boardGame.game
 
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.game.*
 import edu.austral.dissis.chess.gui.*
 import boardGame.piece.Piece
 import boardGame.player.Player
+import chess.game.FromPieceTypeToString
 
 class GameEngineAdapter(private var game: Game,
-    private val pieceTypeToString: FromPieceTypeToString): GameEngine {
+    private val pieceTypeToString: FromPieceTypeToString
+): GameEngine {
     override fun init(): InitialState {
         val boardSize: Pair<Int, Int> = getSquareBoardSize(game.getBoard())
         return InitialState(BoardSize(boardSize.first, boardSize.second),
