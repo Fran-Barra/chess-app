@@ -1,6 +1,7 @@
 package checkers.game
 
 import FailedOutcome
+import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
@@ -11,17 +12,16 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController
 import boardGame.winningConditionStrategy.WinningConditionStrategy
-import chess.game.ChessGame
 
 class CheckersGame(private val board: Board,
                    private val actualPlayer: Player,
+                   private val actualPiece: Piece?,
                    private val turnsController: TurnsController,
                    private val pieceEatingRuler: PieceEatingRuler,
                    private val movementManager: MovementManager,
                    private val movementManagerController: MovementManagerController,
                    private val winningCondition: WinningConditionStrategy
 ): Game {
-
     override fun makeMovement(player: Player, origin: Vector, destination: Vector): GameMovementResult {
         if (player != actualPlayer) return MovementFailed("Is not the player turn")
 
@@ -29,6 +29,10 @@ class CheckersGame(private val board: Board,
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return MovementFailed(outcome.error)
         }
+
+        if (actualPiece != null)
+            if (actualPiece != piece)
+                return MovementFailed("Should continue moving previous piece")
 
         if (!player.playerControlColor(piece.getPieceColor()))
             return MovementFailed("This color is not controlled by the actual player")
@@ -48,18 +52,28 @@ class CheckersGame(private val board: Board,
 
         //TODO: modify movementManager given the events
 
-
         val newBoard: Board = movementResult.newBoard
 
-        val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
-            is SuccessfulOutcome -> outcome.data
-            is FailedOutcome -> return MovementFailed(outcome.error)
+        val nextPlayer: Player
+        val newTurnsControllerStatus: TurnsController
+        val newActualPiece: Piece?
+        if (pieceContinueEating(movementResult, piece, actualPlayer)) {
+            newActualPiece = piece
+            nextPlayer = actualPlayer
+            newTurnsControllerStatus = turnsController
+        } else {
+            newActualPiece = null
+
+            val getNextPlayer: Pair<Player, TurnsController> = when (val outcome = turnsController.getNextPlayerTurn()){
+                is SuccessfulOutcome -> outcome.data
+                is FailedOutcome -> return MovementFailed(outcome.error)
+            }
+            nextPlayer = getNextPlayer.first
+            newTurnsControllerStatus = getNextPlayer.second
         }
-        val nextPlayer: Player = getNextPlayer.first
-        val newTurnsControllerStatus: TurnsController = getNextPlayer.second
 
         //TODO use new movementManager and new movementManagerController
-        val newGameState: ChessGame = ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
+        val newGameState = CheckersGame(newBoard, nextPlayer, newActualPiece, newTurnsControllerStatus, pieceEatingRuler,
             movementManager, movementManagerController, winningCondition)
 
         val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(newGameState)) {
@@ -69,6 +83,27 @@ class CheckersGame(private val board: Board,
         if (won) return PlayerWon(actualPlayer)
 
         return MovementSuccessful(newGameState)
+    }
+
+    private fun pieceContinueEating(movementResult: MovementResult, piece: Piece, player: Player): Boolean{
+        val pos = when (val outcome = findPiecePos(piece, movementResult.newBoard)){
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return false
+        }
+        return hasPieceEaten(movementResult) && isPieceAbleToEat(pos, movementResult.newBoard, player)
+    }
+
+    private fun hasPieceEaten(movementResult: MovementResult): Boolean {
+        for (movementEvent in movementResult.movementEvents)
+            if (movementEvent is Eat) return true
+        return false
+    }
+
+    private fun findPiecePos(piece: Piece, board: Board): Outcome<Vector> {
+        for ((xPiece: Piece, position: Vector) in board.getPiecesAndPosition()) {
+            if (xPiece == piece) return SuccessfulOutcome(position)
+        }
+        return FailedOutcome("Position of piece not found")
     }
 
     override fun getActualPlayer(): Player = actualPlayer
