@@ -86,7 +86,7 @@ class GameEngineAdapter(private var game: Game,
 
         }
 
-        return Pair(xMax-xMin, yMax-yMin)
+        return Pair(xMax-xMin+1, yMax-yMin+1)
     }
 }
 
