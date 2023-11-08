@@ -2,7 +2,7 @@ package boardGame
 
 import chess.game.FromPieceTypeToString
 import edu.austral.dissis.chess.gui.*
-import chess.game.GameEngineAdapter
+import boardGame.game.GameEngineAdapter
 import chess.game.gameFactory.RebellionChessFactory
 import javafx.application.Application
 
