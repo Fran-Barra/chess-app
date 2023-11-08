@@ -1,4 +1,4 @@
-package checkers.game
+package checkers
 
 import FailedOutcome
 import Outcome
@@ -12,6 +12,7 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController
 import boardGame.winningConditionStrategy.WinningConditionStrategy
+import checkers.game.isPieceAbleToEat
 
 class CheckersGame(private val board: Board,
                    private val actualPlayer: Player,
@@ -50,7 +51,8 @@ class CheckersGame(private val board: Board,
         }
 
 
-        //TODO: modify movementManager given the events
+        val newMovementManager: MovementManager =
+            movementManagerController.updateMovementManager(movementManager, movementResult, this)
 
         val newBoard: Board = movementResult.newBoard
 
@@ -72,9 +74,8 @@ class CheckersGame(private val board: Board,
             newTurnsControllerStatus = getNextPlayer.second
         }
 
-        //TODO use new movementManager and new movementManagerController
         val newGameState = CheckersGame(newBoard, nextPlayer, newActualPiece, newTurnsControllerStatus, pieceEatingRuler,
-            movementManager, movementManagerController, winningCondition)
+            newMovementManager, movementManagerController, winningCondition)
 
         val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(newGameState)) {
             is SuccessfulOutcome -> outcome.data

@@ -7,5 +7,5 @@ interface MovementManagerController {
     /**
      * Activate or deactivate movements in MovementManager given the event.
      */
-    fun updateMovementManager(manager: MovementManager, event: MovementEvent, newGameState: Game): MovementManager
+    fun updateMovementManager(manager: MovementManager, event: MovementResult, oldGameState: Game): MovementManager
 }

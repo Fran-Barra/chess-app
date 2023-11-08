@@ -44,7 +44,8 @@ class ChessGame (private val board: Board,
         }
 
 
-        //TODO: modify movementManager given the events
+        val newMovementManager: MovementManager =
+            movementManagerController.updateMovementManager(movementManager, movementResult, this)
 
 
         val newBoard: Board = movementResult.newBoard
@@ -58,7 +59,7 @@ class ChessGame (private val board: Board,
 
         //TODO use new movementManager and new movementManagerController
         val newGameState: ChessGame = ChessGame(newBoard, nextPlayer, newTurnsControllerStatus, pieceEatingRuler,
-                movementManager, movementManagerController, winningCondition)
+                newMovementManager, movementManagerController, winningCondition)
 
         val won: Boolean = when (val outcome = winningCondition.checkWinningConditions(newGameState)) {
             is SuccessfulOutcome -> outcome.data
