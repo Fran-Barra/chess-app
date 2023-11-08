@@ -7,7 +7,7 @@ import boardGame.movement.unionMovement.AndUnionMovementValidator
 
 object KingMovementStrategy: MovementStrategyFactory {
     private val strategy: MovementValidator by lazy {
-        AndUnionMovementValidator(listOf(DistanceLimitMovement(2), QueenMovementStrategy.getMovementStrategy()))
+        AndUnionMovementValidator(listOf(DistanceLimitMovement(1), QueenMovementStrategy.getMovementStrategy()))
     }
     override fun getMovementStrategy(): MovementValidator {
         return strategy
