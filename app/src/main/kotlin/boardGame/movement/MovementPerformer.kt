@@ -13,3 +13,4 @@ data class MovementResult(val movementIdentifier: Int, val newBoard: Board, val 
 sealed interface MovementEvent
 data class Move(val piece: Piece, val from: Vector, val too: Vector): MovementEvent
 data class Eat(val piece: Piece, val position: Vector, val eater: Piece): MovementEvent
+data class Promotion(val oldPiece: Piece, val newPiece: Piece, val position: Vector): MovementEvent

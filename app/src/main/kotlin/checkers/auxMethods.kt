@@ -8,6 +8,7 @@ import boardGame.piece.Piece
 import boardGame.player.Player
 
 //TODO: if wants to expand the game, should consider using movements
+//TODO: this shit is not working
 fun isPlayerAbleToEat(player: Player, board: Board): Boolean {
     for ((piece: Piece, position: Vector) in board.getPiecesAndPosition()) {
         if (!player.playerControlColor(piece.getPieceColor())) continue
