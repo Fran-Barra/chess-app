@@ -42,6 +42,10 @@ class Vector (val x: Int, val y: Int){
         return Vector(x*mul, y*mul)
     }
 
+    operator fun times(mul: Float): Vector{
+        return Vector((x*mul).toInt(), (y*mul).toInt())
+    }
+
     override fun equals(other: Any?): Boolean {
         if (other !is Vector) return false
         if (x != other.x) return false
