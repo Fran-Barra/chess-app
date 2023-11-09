@@ -12,6 +12,6 @@ object DiagonalMovement: MovementValidator {
         board: Board
     ): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
-        return abs(actual.x - destination.x) != abs(actual.y - destination.y)
+        return abs(actual.x - destination.x) == abs(actual.y - destination.y)
     }
 }
