@@ -22,10 +22,10 @@ fun isPieceAbleToEat(piecePos: Vector, board: Board, player: Player): Boolean {
         is FailedOutcome -> return false
     }
     return if (piece.getPieceType() == 0) {
-        isNormalPieceAbleToEat(piecePos, board, player)
+        isQueenAbleToEat(piecePos, board, player)
     }
     else {
-        isQueenAbleToEat(piecePos, board, player)
+        isNormalPieceAbleToEat(piecePos, board, player)
     }
 }
 
@@ -39,10 +39,10 @@ fun isQueenAbleToEat(piecePos: Vector, board: Board, player: Player): Boolean {
 }
 
 private fun isPieceAbleToEatInDirection(piecePos: Vector, board: Board, player: Player, upDirection: Boolean): Boolean {
-    val directionR = if (upDirection) Vector(1, 1) else Vector(1, -1)
+    val directionR = if (upDirection) Vector(1, -1) else Vector(1, 1)
     if (isPieceAbleToEatInDirection(directionR, board, piecePos, player)) return true
 
-    val directionL = if (frontIsUpDirection(player)) Vector(-1, 1) else Vector(-1, -1)
+    val directionL = if (upDirection) Vector(-1, -1) else Vector(-1, 1)
     return isPieceAbleToEatInDirection(directionL, board, piecePos, player)
 }
 
