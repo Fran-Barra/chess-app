@@ -38,7 +38,7 @@ object CastlingValidator: MovementValidator {
     private fun isPathEmpty(from: Vector, too: Vector, board: Board): Boolean {
         val xDir = if (from.x > too.x) {-1} else {1}
 
-        for (i in 1..abs(from.x-too.x))
+        for (i in 1 until abs(from.x-too.x))
             if (board.getPieceInPosition(Vector(from.x + i * xDir, from.y)) is SuccessfulOutcome)
                 return false
         return true
