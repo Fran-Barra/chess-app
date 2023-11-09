@@ -10,9 +10,11 @@ import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
+import boardGame.winningConditionStrategy.OrUnionWiningCondition
 import checkers.boardFactory.CheckersBoardFiller
 import checkers.game.CheckersGame
 import checkers.movement.gameMovementsFactory.CheckersMovementsFactory
+import checkers.winningCondition.OtherPlayerNoMovementsWC
 import checkers.winningCondition.TotalAnnihilationWinningCondition
 
 object CheckersFactory: GameFactory {
@@ -34,7 +36,10 @@ object CheckersFactory: GameFactory {
             BasicEatingRuler(),
             movements,
             movementsController,
-            TotalAnnihilationWinningCondition()
+            OrUnionWiningCondition(
+                listOf(TotalAnnihilationWinningCondition(), OtherPlayerNoMovementsWC())
+            )
         )
+
     }
 }
