@@ -8,7 +8,7 @@ import boardGame.player.Player
 import chess.game.FromPieceTypeToString
 
 class GameEngineAdapter(private var game: Game,
-    private val pieceTypeToString: FromPieceTypeToString
+    private val pieceTypeToString: GetPieceFromTypeInStringFormat
 ): GameEngine {
     override fun init(): InitialState {
         val boardSize: Pair<Int, Int> = getSquareBoardSize(game.getBoard())
