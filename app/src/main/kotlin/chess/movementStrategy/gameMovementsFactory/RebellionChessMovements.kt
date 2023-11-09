@@ -1,18 +1,21 @@
 package chess.movementStrategy.gameMovementsFactory
 
-import boardGame.movement.GameMovementsFactory
-import boardGame.movement.MovementStrategy
+import boardGame.movement.*
 import chess.movementStrategy.movementStrategyFactory.*
 
 object RebellionChessMovements: GameMovementsFactory {
-    override fun getMovementsStrategies(): Map<Int, MovementStrategy> {
-        val movementStrategies: MutableMap<Int, MovementStrategy> = mutableMapOf()
-        movementStrategies[0] = KingMovementStrategy.getMovementStrategy()
-        movementStrategies[1] = QueenMovementStrategy.getMovementStrategy()
-        movementStrategies[6] = PrincessMovementStrategy.getMovementStrategy()
-        movementStrategies[3] = KnightMovementStrategy.getMovementStrategy()
-        movementStrategies[4] = RookMovementStrategy.getMovementStrategy()
-        movementStrategies[5] = PawnMovementStrategy.getMovementStrategy()
-        return movementStrategies
+    override fun getMovementsManager(): MovementManager {
+        val movementStrategies: MutableMap<Int, List<Movement>> = mutableMapOf()
+        movementStrategies[0] = listOf(Movement(KingMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        movementStrategies[1] = listOf(Movement(QueenMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        movementStrategies[6] = listOf(Movement(PrincessMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        movementStrategies[3] = listOf(Movement(KnightMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        movementStrategies[4] = listOf(Movement(RookMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        movementStrategies[5] = listOf(Movement(PawnMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
+        return PieceTypeMovementManager(movementStrategies)
+    }
+
+    override fun getMovementsManagerController(): MovementManagerController {
+        return BaseMovementManagerController(listOf())
     }
 }

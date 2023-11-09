@@ -1,5 +1,6 @@
 package chess.game
 
+import boardGame.game.GetPieceFromTypeInStringFormat
 import boardGame.piece.Piece
 
 class FromPieceTypeToString: GetPieceFromTypeInStringFormat {

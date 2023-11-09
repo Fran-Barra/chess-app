@@ -1,15 +1,15 @@
 package chess.movementStrategy.movementStrategyFactory
 
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.movement.MovementStrategyFactory
-import chess.movementStrategy.DistanceLimitMovement
-import boardGame.movement.unionMovement.AndUnionMovement
+import chess.movementStrategy.validators.DistanceLimitMovement
+import boardGame.movement.unionMovement.AndUnionMovementValidator
 
 object KingMovementStrategy: MovementStrategyFactory {
-    private val strategy: MovementStrategy by lazy {
-        AndUnionMovement(listOf(DistanceLimitMovement(2), QueenMovementStrategy.getMovementStrategy()))
+    private val strategy: MovementValidator by lazy {
+        AndUnionMovementValidator(listOf(DistanceLimitMovement(1), QueenMovementStrategy.getMovementStrategy()))
     }
-    override fun getMovementStrategy(): MovementStrategy {
+    override fun getMovementStrategy(): MovementValidator {
         return strategy
     }
 }

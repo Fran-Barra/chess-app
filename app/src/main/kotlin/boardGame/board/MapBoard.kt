@@ -37,7 +37,7 @@ class MapBoard(val board: Map<Vector, Piece?>): Board {
         return if (board.containsKey(position)) {
             val piece = board[position]
             if (piece != null) {SuccessfulOutcome(piece)}
-            else {FailedOutcome("No boardGame.piece found in position $position")}
+            else {FailedOutcome("No piece found in position $position")}
         } else {
             FailedOutcome("Key $position does not exist in the map")
         }

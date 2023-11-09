@@ -5,30 +5,19 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
-import boardGame.movement.SpecialMovementController
+import boardGame.game.Game
 import boardGame.piece.Piece
-import boardGame.pieceEatingRuler.PieceEatingRuler
-import boardGame.player.Player
 
 
-fun isPieceInCheck(
-    piece: Piece,
-    board: Board,
-    actualPlayer: Player,
-    pieceEatingRuler: PieceEatingRuler,
-    pieceMovementStrategy: Map<Int, MovementStrategy>,
-    specialMovementsController: SpecialMovementController
-): Outcome<Boolean> {
+fun isPieceInCheck(piece: Piece, game: Game): Outcome<Boolean> {
 
 
-    val pieceToCheckPos: Vector = when (val outcome = getPieceToCheckPosition(piece, board)) {
+    val pieceToCheckPos: Vector = when (val outcome = getPieceToCheckPosition(piece, game.getBoard())) {
         is SuccessfulOutcome -> outcome.data
         is FailedOutcome -> return FailedOutcome(outcome.error)
     }
 
-    return SuccessfulOutcome(isPositionOnCheck(piece, pieceToCheckPos, board, actualPlayer, pieceEatingRuler,
-        pieceMovementStrategy, specialMovementsController))
+    return SuccessfulOutcome(isPositionOnCheck(piece, pieceToCheckPos, game))
 }
 
 private fun getPieceToCheckPosition(piece: Piece, board: Board): Outcome<Vector> {
@@ -40,22 +29,13 @@ private fun getPieceToCheckPosition(piece: Piece, board: Board): Outcome<Vector>
     return FailedOutcome("Piece position not found on board")
 }
 
-private fun isPositionOnCheck(
-    toCheckPiece: Piece,
-    toCheckPiecePosition: Vector,
-    board: Board,
-    actualPlayer: Player,
-    pieceEatingRuler: PieceEatingRuler,
-    pieceMovementStrategy: Map<Int, MovementStrategy>,
-    specialMovementsController: SpecialMovementController
-): Boolean {
-    val piecesAbleToCheck: List<Pair<Piece, Vector>> = board.getPiecesAndPosition()
-        .filter {(piece: Piece, _) -> pieceEatingRuler.canPieceEatPiece(piece, toCheckPiece)}
+private fun isPositionOnCheck(toCheckPiece: Piece, toCheckPiecePosition: Vector, game: Game): Boolean {
+    val piecesAbleToCheck: List<Pair<Piece, Vector>> = game.getBoard().getPiecesAndPosition()
+        .filter {(piece: Piece, _) -> game.getPieceEatingRuler().canPieceEatPiece(piece, toCheckPiece)}
 
 
-    for ((piece: Piece, pos: Vector) in piecesAbleToCheck){
-        if (!canPieceMoveToToCheckPiecePosition(piece, pos, toCheckPiecePosition, board, actualPlayer, pieceEatingRuler,
-                pieceMovementStrategy, specialMovementsController)
+    for ((_: Piece, pos: Vector) in piecesAbleToCheck){
+        if (!canPieceMoveToToCheckPiecePosition(pos, toCheckPiecePosition, game)
             ) continue
         return true
     }
@@ -63,15 +43,17 @@ private fun isPositionOnCheck(
 }
 
 //TODO: consider special cases: the one that say that the movement is available but dont move to that place.
-private fun canPieceMoveToToCheckPiecePosition(piece: Piece, piecePosition: Vector, destiny: Vector,
-                                               board: Board,
-                                               actualPlayer: Player,
-                                               pieceEatingRuler: PieceEatingRuler,
-                                               pieceMovementStrategy: Map<Int, MovementStrategy>,
-                                               specialMovementsController: SpecialMovementController
-): Boolean {
-    val movementStrategy: MovementStrategy = pieceMovementStrategy[piece.getPieceType()]?: return false
+private fun canPieceMoveToToCheckPiecePosition(piecePosition: Vector, destiny: Vector,
+                                               game: Game): Boolean {
+    val movementPerformer = when (val outcome = game.getMovementManager().findValidMovementPerformer(
+        game.getPieceEatingRuler(), game.getActualPlayer(), piecePosition, destiny, game.getBoard())
+    ){
+        is SuccessfulOutcome -> outcome.data
+        is FailedOutcome -> return false
+    }
 
-    return movementStrategy.checkMovement(pieceEatingRuler, actualPlayer, piecePosition, destiny, board)
+    //TODO: validate that performing the movement may destroy the king
+    //TODO: consider the movements that dont take the king as target but is a target by movement performer
+    return true
 }
 

@@ -1,17 +1,17 @@
-package chess.movementStrategy
+package chess.movementStrategy.validators
 
 import FailedOutcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementStrategy
+import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import kotlin.math.abs
 
-object DiagonalMovement: MovementStrategy {
-    override fun checkMovement(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                               destination: Vector, board: Board
+object DiagonalMovement: MovementValidator {
+    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
+                          destination: Vector, board: Board
     ): Boolean {
         if (!board.positionExists(destination) || !board.positionExists(actual)) return false
         if (abs(actual.x - destination.x) != abs(actual.y - destination.y)) return false

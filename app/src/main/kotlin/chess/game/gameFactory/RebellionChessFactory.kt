@@ -4,12 +4,11 @@ import boardGame.board.Board
 import chess.boardFactories.RebellionBoardFiller
 import boardGame.board.boardFactory.RectangularBoardBuilder
 import boardGame.game.GameFactory
-import boardGame.movement.GameEvent
+import boardGame.movement.MovementManager
+import boardGame.movement.MovementManagerController
 import chess.game.ChessGame
-import boardGame.movement.MovementStrategy
-import boardGame.movement.SpecialMovement
+import boardGame.movement.MovementValidator
 import chess.movementStrategy.gameMovementsFactory.RebellionChessMovements
-import boardGame.movement.specialMovement.BaseSpecialMovementController
 import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
@@ -26,18 +25,16 @@ object RebellionChessFactory: GameFactory {
         var board: Board = RectangularBoardBuilder(9, 10).createNewEmptyBoard()
         board = RebellionBoardFiller().fillBoard(board)
 
-        val movementStrategies: Map<Int, MovementStrategy> = RebellionChessMovements.getMovementsStrategies()
-
-        //TODO: fill this
-        val specialMovements: Map<Piece, List<Pair<List<GameEvent>, SpecialMovement>>> = mapOf()
+        val movementsManager: MovementManager = RebellionChessMovements.getMovementsManager()
+        val movementsManagerController: MovementManagerController = RebellionChessMovements.getMovementsManagerController()
 
         return ChessGame(
             board,
             players[0],
             CircleTurnController(players, 1),
             BasicEatingRuler(),
-            movementStrategies,
-            BaseSpecialMovementController(specialMovements),
+            movementsManager,
+            movementsManagerController,
             TotalAnnihilationWinningCondition()
         )
     }
