@@ -3,12 +3,14 @@ package checkers.movement.validator.composedValidators
 import boardGame.movement.MovementStrategyFactory
 import boardGame.movement.MovementValidator
 import boardGame.movement.unionMovement.AndUnionMovementValidator
-import checkers.movement.validator.ValidateAdvancing
+import checkers.movement.validator.*
+import chess.movementStrategy.validators.DiagonalMovement
+import chess.movementStrategy.validators.DistanceLimitMovement
 
-object NormalPieceMovement: MovementStrategyFactory {
+object CheckerMovement: MovementStrategyFactory {
     private val strategy by lazy {
         AndUnionMovementValidator(listOf(
-            ValidateAdvancing, CheckerMovement.getMovementStrategy()
+            DistanceLimitMovement(1), DiagonalMovement, EmptyDestination, NoPieceCanEat
         ))
     }
     override fun getMovementStrategy(): MovementValidator {
