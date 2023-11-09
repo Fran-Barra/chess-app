@@ -1,4 +1,4 @@
-package checkers
+package checkers.game
 
 import FailedOutcome
 import Outcome
@@ -12,7 +12,7 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController
 import boardGame.winningConditionStrategy.WinningConditionStrategy
-import checkers.game.isPieceAbleToEat
+import checkers.isPieceAbleToEat
 
 class CheckersGame(private val board: Board,
                    private val actualPlayer: Player,

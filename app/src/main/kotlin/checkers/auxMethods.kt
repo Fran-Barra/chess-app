@@ -1,4 +1,4 @@
-package checkers.game
+package checkers
 
 import FailedOutcome
 import SuccessfulOutcome
@@ -21,8 +21,12 @@ fun isPieceAbleToEat(piecePos: Vector, board: Board, player: Player): Boolean {
         is SuccessfulOutcome -> outcome.data
         is FailedOutcome -> return false
     }
-    return if (piece.getPieceType() == 0) {isNormalPieceAbleToEat(piecePos, board, player)}
-    else {isQueenAbleToEat(piecePos, board, player)}
+    return if (piece.getPieceType() == 0) {
+        isNormalPieceAbleToEat(piecePos, board, player)
+    }
+    else {
+        isQueenAbleToEat(piecePos, board, player)
+    }
 }
 
 fun isNormalPieceAbleToEat(piecePos: Vector, board: Board, player: Player): Boolean {
