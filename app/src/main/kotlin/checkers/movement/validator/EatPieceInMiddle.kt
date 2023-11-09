@@ -18,7 +18,7 @@ object EatPieceInMiddle: MovementValidator {
             is FailedOutcome -> return false
         }
 
-        val toEatPiece: Piece = when (val outcome = board.getPieceInPosition(actual + (actual - destination) * 0.5f)){
+        val toEatPiece: Piece = when (val outcome = board.getPieceInPosition(actual + (destination-actual) * 0.5f)){
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return false
         }
