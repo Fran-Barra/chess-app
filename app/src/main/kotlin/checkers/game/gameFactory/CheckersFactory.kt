@@ -1,11 +1,13 @@
 package checkers.game.gameFactory
 
 import boardGame.board.Board
+import boardGame.board.Vector
 import boardGame.board.boardFactory.RectangularBoardBuilder
 import boardGame.game.Game
 import boardGame.game.GameFactory
 import boardGame.movement.MovementManager
 import boardGame.movement.MovementManagerController
+import boardGame.piece.BasicPiece
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
@@ -25,7 +27,7 @@ object CheckersFactory: GameFactory {
         )
 
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
-        board = CheckersBoardFiller.fillBoard(board)
+        board = createTestBoard(board)
 
         val movements: MovementManager = CheckersMovementsFactory.getMovementsManager()
         val movementsController: MovementManagerController = CheckersMovementsFactory.getMovementsManagerController()
@@ -41,5 +43,10 @@ object CheckersFactory: GameFactory {
             )
         )
 
+    }
+
+    private fun createTestBoard(board: Board): Board {
+        var newBoard = board.addPiece(BasicPiece(1, 0), Vector(6, 2))
+        return  newBoard.addPiece(BasicPiece(1, 1), Vector(4, 2))
     }
 }

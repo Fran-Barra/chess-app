@@ -15,8 +15,8 @@ object CheckersMovementsFactory: GameMovementsFactory {
                 Movement(EatCheckerMovement.getMovementStrategy(), JumpAndEatPerformer)
             )),
             Pair(1, listOf(
-                Movement(NormalPieceMovement.getMovementStrategy(), PerformMovementAndPromoteIfPossible(FromTooMovementPerformer)),
-                Movement(EatNormalMovement.getMovementStrategy(), PerformMovementAndPromoteIfPossible(JumpAndEatPerformer))
+                Movement(NormalPieceMovement.getMovementStrategy(), PerformMovementAndPromoteIfPossible(FromTooMovementPerformer, 0)),
+                Movement(EatNormalMovement.getMovementStrategy(), PerformMovementAndPromoteIfPossible(JumpAndEatPerformer, 0))
             ))
         )
 

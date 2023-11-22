@@ -8,7 +8,7 @@ import boardGame.board.Vector
 import boardGame.piece.BasicPiece
 import boardGame.piece.Piece
 
-class PerformMovementAndPromoteIfPossible(private val movementP: MovementPerformer): MovementPerformer {
+class PerformMovementAndPromoteIfPossible(private val movementP: MovementPerformer, val tooType: Int): MovementPerformer {
     override fun performMovement(piecePosition: Vector, too: Vector, board: Board): Outcome<MovementResult> {
         val result: MovementResult = when (val output = movementP.performMovement(piecePosition, too, board)){
             is SuccessfulOutcome -> output.data
@@ -22,7 +22,7 @@ class PerformMovementAndPromoteIfPossible(private val movementP: MovementPerform
 
         if (!isAbleToPromote(piece, result.newBoard, too)) return SuccessfulOutcome(result)
 
-        val promotedPiece = BasicPiece(0, piece.getPieceColor(), piece.getPieceId())
+        val promotedPiece = BasicPiece(tooType, piece.getPieceColor(), piece.getPieceId())
         val newBoard: Board = result.newBoard.addPiece(promotedPiece, too)
 
         val events: List<MovementEvent> = result.movementEvents + listOf<MovementEvent>(Promotion(piece, promotedPiece, too))
