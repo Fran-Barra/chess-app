@@ -1,0 +1,805 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AndUnionMovementValidator {
+  + AndUnionMovementValidator(Iterable<MovementValidator>): 
+  + addStrategies(Iterable<MovementValidator>): UnionMovementValidator
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class AuxMethodsKt {
+  + isPieceAbleToEat(Vector, Board, Player): Boolean
+  + isPlayerAbleToEat(Player, Board): Boolean
+  - frontIsUpDirection(Player): Boolean
+  + isNormalPieceAbleToEat(Vector, Board, Player): Boolean
+  + isQueenAbleToEat(Vector, Board, Player): Boolean
+  - isPieceAbleToEatInDirection(Vector, Board, Player, Boolean): Boolean
+  - isPieceAbleToEatInDirection(Vector, Board, Vector, Player): Boolean
+}
+class BaseBoardFiller {
+  + BaseBoardFiller(): 
+  - fillRowWithBasicPieces(Board, Int, Int): Board
+  + fillBoard(Board): Board
+}
+class BaseMovementManagerController {
+  + BaseMovementManagerController(List<UpdateMovementManagerOverEvent>): 
+  + updateMovementManager(MovementManager, MovementResult, Game): MovementManager
+   managerUpdaters: List<UpdateMovementManagerOverEvent>
+}
+class BasicChessFactory {
+   game: ChessGame
+}
+class BasicChessMovements {
+   movementsManager: MovementManager
+   movementsManagerController: MovementManagerController
+}
+class BasicEatingRuler {
+  + BasicEatingRuler(): 
+  + canPieceEatPiece(Piece, Piece): Boolean
+}
+class BasicPiece {
+  + BasicPiece(Int, Int): 
+   pieceType: Int
+   pieceColor: Int
+}
+class BishopMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+interface Board << interface >> {
+  + positionExists(Vector): Boolean
+  + getPieceInPosition(Vector): Outcome<Piece>
+  + removePiece(Piece): Board
+  + movePiece(Piece, Vector): Board
+  + addPiece(Piece, Vector): Board
+   boardAssList: List<Pair<Vector, Piece>>
+   piecesAndPosition: List<Pair<Piece, Vector>>
+}
+interface BoardFactory << interface >> {
+  + createNewEmptyBoard(): Board
+}
+interface BoardFiller << interface >> {
+  + fillBoard(Board): Board
+}
+class BoardGame {
+  + BoardGame(): 
+   gameEngine: GameEngine
+   imageResolver: ImageResolver
+}
+class CastlingPerformer {
+  - findPiecesOfType(Int, Board): List<Pair<Piece, Vector>>
+  + performMovement(Vector, Vector, Board): Outcome<MovementResult>
+  - selectClosestToPos(List<Pair<Piece, Vector>>, Vector): Pair<Piece, Vector>
+}
+class CastlingValidator {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+  - isPathEmpty(Vector, Vector, Board): Boolean
+   pathInCheck: Boolean
+}
+class CheckConditionKt {
+  - getPieceToCheckPosition(Piece, Board): Outcome<Vector>
+  - canPieceMoveToToCheckPiecePosition(Vector, Vector, Game): Boolean
+  - isPositionOnCheck(Piece, Vector, Game): Boolean
+  + isPieceInCheck(Piece, Game): Outcome<Boolean>
+}
+class CheckVerticalPositive {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class CheckerMovement {
+   movementStrategy: MovementValidator
+   strategy: AndUnionMovementValidator
+}
+class CheckersBoardFiller {
+  + fillBoard(Board): Board
+  - fillSpacedRow(Board, Int, Int, Int, Int): Board
+}
+class CheckersFactory {
+   game: Game
+}
+class CheckersGame {
+  + CheckersGame(Board, Player, Piece?, TurnsController, PieceEatingRuler, MovementManager, MovementManagerController, WinningConditionStrategy): 
+  - hasPieceEaten(MovementResult): Boolean
+  - findPiecePos(Piece, Board): Outcome<Vector>
+  + makeMovement(Player, Vector, Vector): GameMovementResult
+  - pieceContinueEating(MovementResult, Piece, Player): Boolean
+   winningConditions: WinningConditionStrategy
+   actualPlayer: Player
+   pieceEatingRuler: PieceEatingRuler
+   board: Board
+   movementManagerController: MovementManagerController
+   turnController: TurnsController
+   movementManager: MovementManager
+}
+class CheckersMovementsFactory {
+   movementsManager: MovementManager
+   movementsManagerController: MovementManagerController
+}
+class CheckmateWinningCondition {
+  + CheckmateWinningCondition(): 
+  - findPiecePosition(Piece, Board): Outcome<Vector>
+  + checkWinningConditions(Game): Outcome<Boolean>
+  - canCheckPieceMoveToNotCheck(Piece, Game): Outcome<Boolean>
+  - performMovementOfOtherPieceAndEvaluateIfInCheck(Piece, Vector, MovementPerformer, Piece, Game): Outcome<Boolean>
+  - canThisPieceSaveTheCheckPiece(Piece, Piece, Game): Outcome<Boolean>
+  - performMovement(Vector, Vector, MovementPerformer, Game): Outcome<Game>
+  - canAnotherPieceSaveTheCheckPieceFromCheck(Piece, Game): Outcome<Boolean>
+  - isCheckMate(Piece, Game): Outcome<Boolean>
+  - performMovementAndEvaluateIfInCheck(Piece, MovementPerformer, Vector, Vector, Game): Outcome<Boolean>
+  - findPieceToCheck(Board, Player, Int): Outcome<Piece>
+}
+class ChessGame {
+  + ChessGame(Board, Player, TurnsController, PieceEatingRuler, MovementManager, MovementManagerController, WinningConditionStrategy): 
+  + makeMovement(Player, Vector, Vector): GameMovementResult
+   winningConditions: WinningConditionStrategy
+   actualPlayer: Player
+   pieceEatingRuler: PieceEatingRuler
+   board: Board
+   movementManagerController: MovementManagerController
+   turnController: TurnsController
+   movementManager: MovementManager
+}
+class CircleTurnController {
+  + CircleTurnController(List<Player>, Int): 
+  + addPlayer(Player): TurnsController
+   nextPlayerTurn: Outcome<Pair<Player, TurnsController>>
+   players: List<Player>
+}
+class ClientConnectedAsPlayer {
+  + ClientConnectedAsPlayer(ClientGame): 
+  + handleMessage(Message<InitialGameData>): Unit
+   gameClient: ClientGame
+}
+class ClientGame {
+  + ClientGame(): 
+  - fromVectorToPos(Vector): Position
+  - fromPosToVector(Position): Vector
+  + handleMove(Move): Unit
+  + initializeGame(GameView): Unit
+}
+class ClientGameConnectionListener {
+  + ClientGameConnectionListener(): 
+  + handleConnection(): Unit
+  + handleConnectionClosed(): Unit
+}
+class ClientPlayerRegistry {
+  + ClientPlayerRegistry(ServerGameAdapter, List<Player>): 
+  + getPlayer(String): Outcome<Player>
+  - AssignClientToPlayer(String, Map<String, Player>): Outcome<Map<String, Player>>
+  + handleClientConnection(String): Unit
+  + handleClientConnectionClosed(String): Unit
+   serverGame: ServerGameAdapter
+   players: List<Player>
+}
+interface ClientPlayerRegistryNotification<T> << interface >>
+class Diagonal2Slots {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class DiagonalMovement {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+  - pathIsEmpty(Vector, Vector, Board): Boolean
+}
+class DiagonalMovement {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class DistanceLimitMovement {
+  + DistanceLimitMovement(Int): 
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+   maxDistance: Int
+}
+class DistanceLimitMovement {
+  + DistanceLimitMovement(Int): 
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+   maxDistance: Int
+}
+class DontEatInDestini {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class EatCheckerMovement {
+   movementStrategy: MovementValidator
+   strategy: AndUnionMovementValidator
+}
+class EatInDestini {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class EatLogicKt {
+  + canEat(Vector, Vector, Board, PieceEatingRuler): Boolean
+}
+class EatNormalMovement {
+   movementStrategy: MovementValidator
+   strategy: AndUnionMovementValidator
+}
+class EatPieceInMiddle {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class EmptyDestination {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class EmptyOrEatEnemyInDestiny {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class ExampleMainKt {
+  + main(): Unit
+}
+class FromPieceTypeToString {
+  + FromPieceTypeToString(): 
+  + getPieceTypeInStringFormat(Piece): String
+}
+class FromPieceTypeToString {
+  + FromPieceTypeToString(): 
+  + getPieceTypeInStringFormat(Piece): String
+}
+class FromTooMovementPerformer {
+  + performMovement(Vector, Vector, Board): Outcome<MovementResult>
+}
+interface Game << interface >> {
+  + makeMovement(Player, Vector, Vector): GameMovementResult
+   winningConditions: WinningConditionStrategy
+   actualPlayer: Player
+   pieceEatingRuler: PieceEatingRuler
+   board: Board
+   movementManagerController: MovementManagerController
+   turnController: TurnsController
+   movementManager: MovementManager
+}
+class GameEngineAdapter {
+  + GameEngineAdapter(Game, GetPieceFromTypeInStringFormat): 
+  - getSquareBoardSize(Board): Pair<Int, Int>
+  - fromPosToVector(Position): Vector
+  - fromGameToListPieces(Game): List<ChessPiece>
+  - fromPieceToChessPiece(Piece, Vector): ChessPiece
+  + init(): InitialState
+  - fromVectorToPos(Vector): Position
+  - fromPlayerToPlayerColor(Player): PlayerColor
+  + applyMove(Move): MoveResult
+  - fromGameResultToMoveResult(GameMovementResult): MoveResult
+  - fromPieceGetPlayerColor(Piece): PlayerColor
+  - fromColorIdToPlayerColor(Int): PlayerColor
+}
+interface GameFactory << interface >> {
+   game: Game
+}
+interface GameMovementResult << interface >>
+interface GameMovementsFactory << interface >> {
+   movementsManager: MovementManager
+   movementsManagerController: MovementManagerController
+}
+class GameUpdateListener {
+  + GameUpdateListener(): 
+  + handleMessage(Message<NewGameState>): Unit
+}
+interface GetPieceFromTypeInStringFormat << interface >> {
+  + getPieceTypeInStringFormat(Piece): String
+}
+class HorizontalMovement {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+  - isHorizontal(Vector, Vector): Boolean
+  - checkIfPieceBetweenXMinAndXMax(Int, Int, Int, Board): Boolean
+  - checkIfPieceInMiddlePath(Vector, Vector, Board): Boolean
+}
+class JumpAndEatPerformer {
+  + performMovement(Vector, Vector, Board): Outcome<MovementResult>
+}
+class KingMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class KnightMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class LJumpMovement {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class MainKt {
+  + main(): Unit
+}
+class MapBoard {
+  + MapBoard(Map<Vector, Piece>): 
+  + addPiece(Piece, Vector): Board
+  + removePiece(Piece): Board
+  + positionExists(Vector): Boolean
+  + getPieceInPosition(Vector): Outcome<Piece>
+  + movePiece(Piece, Vector): Board
+   boardAssList: List<Pair<Vector, Piece>>
+   board: Map<Vector, Piece>
+   piecesAndPosition: List<Pair<Piece, Vector>>
+}
+class MathKt {
+  + pow(Int, Int): Int
+  + distance(Vector, Vector): Double
+}
+class MessageCollectorListener<P> {
+  + MessageCollectorListener(): 
+  + handleMessage(Message<P>): Unit
+   messages: List<P>
+}
+enum MessageTypeByClient << enumeration >> {
+  - MessageTypeByClient(): 
+  + valueOf(String): MessageTypeByClient
+  + values(): MessageTypeByClient[]
+   entries: EnumEntries<MessageTypeByClient>
+}
+enum MessageTypeByServer << enumeration >> {
+  - MessageTypeByServer(): 
+  + valueOf(String): MessageTypeByServer
+  + values(): MessageTypeByServer[]
+   entries: EnumEntries<MessageTypeByServer>
+}
+interface MovementEvent << interface >>
+interface MovementManager << interface >> {
+  + findValidMovementPerformer(PieceEatingRuler, Player, Vector, Vector, Board): Outcome<MovementPerformer>
+  + addMovement(Int, Movement): MovementManager
+  + removeMovement(Int, Movement): MovementManager
+}
+interface MovementManagerController << interface >> {
+  + updateMovementManager(MovementManager, MovementResult, Game): MovementManager
+}
+interface MovementPerformer << interface >> {
+  + performMovement(Vector, Vector, Board): Outcome<MovementResult>
+}
+interface MovementStrategyFactory << interface >> {
+   movementStrategy: MovementValidator
+}
+interface MovementValidator << interface >> {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class MulticolorPlayer {
+  + MulticolorPlayer(Int, Collection<Int>): 
+  + playerControlColor(Int): Boolean
+   playerId: Int
+}
+class NoPieceCanEat {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class NormalPieceMovement {
+   movementStrategy: MovementValidator
+   strategy: AndUnionMovementValidator
+}
+class OrUnionMovementValidator {
+  + OrUnionMovementValidator(Iterable<MovementValidator>): 
+  + addStrategies(Iterable<MovementValidator>): UnionMovementValidator
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class OrUnionWiningCondition {
+  + OrUnionWiningCondition(Iterable<WinningConditionStrategy>): 
+  + checkWinningConditions(Game): Outcome<Boolean>
+}
+class OtherPlayerNoMovementsWC {
+  + OtherPlayerNoMovementsWC(): 
+  - isPieceAbleToDoAnyMovement(Vector, Game): Boolean
+  + checkWinningConditions(Game): Outcome<Boolean>
+  - getPlayerPiecesPositions(Game): List<Vector>
+}
+interface Outcome<T> << interface >>
+class PawnMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class PerformMovementAndPromoteIfPossible {
+  + PerformMovementAndPromoteIfPossible(MovementPerformer): 
+  - isAbleToPromote(Piece, Board, Vector): Boolean
+  + performMovement(Vector, Vector, Board): Outcome<MovementResult>
+}
+interface Piece << interface >> {
+   pieceType: Int
+   pieceColor: Int
+}
+interface PieceEatingRuler << interface >> {
+  + canPieceEatPiece(Piece, Piece): Boolean
+}
+class PieceTypeMovementManager {
+  + PieceTypeMovementManager(Map<Int, List<Movement>>): 
+  + addMovement(Int, Movement): MovementManager
+  + findValidMovementPerformer(PieceEatingRuler, Player, Vector, Vector, Board): Outcome<MovementPerformer>
+  + removeMovement(Int, Movement): MovementManager
+}
+interface Player << interface >> {
+  + playerControlColor(Int): Boolean
+   playerId: Int
+}
+class PrincessMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class QueenMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class RebellionBoardFiller {
+  + RebellionBoardFiller(): 
+  + fillBoard(Board): Board
+  - fillWhitePieces(Board, Int, Int, Int): Board
+}
+class RebellionChessFactory {
+   game: ChessGame
+}
+class RebellionChessMovements {
+   movementsManager: MovementManager
+   movementsManagerController: MovementManagerController
+}
+class RectangularBoardBuilder {
+  + RectangularBoardBuilder(Int, Int): 
+  + createNewEmptyBoard(): Board
+}
+class RookMovementStrategy {
+   movementStrategy: MovementValidator
+   strategy: MovementValidator
+}
+class RowFillerWithPieceType {
+  + RowFillerWithPieceType(Int, Int, Int): 
+  + fillBoard(Board): Board
+}
+class ServerGameAdapter {
+  + ServerGameAdapter(Game): 
+  + sendInitialStateToPlayer(String): Unit
+  + handleMessage(Message<MovePayload>): Unit
+  + ClientPlayerRegistryNotification(ClientPlayerRegistryNotification<T>): Unit
+}
+class ServerGameConnectionListener {
+  + ServerGameConnectionListener(): 
+  + handleClientConnectionClosed(String): Unit
+  + handleClientConnection(String): Unit
+   clients: List<String>
+}
+class ServerMainKt {
+  + main(): Unit
+}
+class TotalAnnihilationWinningCondition {
+  + TotalAnnihilationWinningCondition(): 
+  - getEnemyPieces(List<Pair<Piece, Vector>>, Player): List<Piece>
+  + checkWinningConditions(Game): Outcome<Boolean>
+}
+class TotalAnnihilationWinningCondition {
+  + TotalAnnihilationWinningCondition(): 
+  + checkWinningConditions(Game): Outcome<Boolean>
+  - getEnemyPieces(List<Pair<Piece, Vector>>, Player): List<Piece>
+}
+interface TurnsController << interface >> {
+  + addPlayer(Player): TurnsController
+   nextPlayerTurn: Outcome<Pair<Player, TurnsController>>
+   players: List<Player>
+}
+interface UnionMovementValidator << interface >> {
+  + addStrategies(Iterable<MovementValidator>): UnionMovementValidator
+}
+interface UpdateMovementManagerOverEvent << interface >> {
+  + update(MovementManager, MovementResult, Game): MovementManager
+}
+class ValidateAdvancing {
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+}
+class Vector {
+  + Vector(Int, Int): 
+  + hashCode(): Int
+  + minus(Vector): Vector
+  + equals(Object?): Boolean
+  + plus(Vector): Vector
+  + times(Vector): Int
+  + times(Int): Vector
+  + times(Float): Vector
+   y: Int
+   x: Int
+}
+class VerticalMovement {
+  - checkIfPieceBetweenYMinAndYMax(Int, Int, Int, Board): Boolean
+  - isVertical(Vector, Vector): Boolean
+  + validate(PieceEatingRuler, Player, Vector, Vector, Board): Boolean
+  - checkIfPieceInMiddlePath(Vector, Vector, Board): Boolean
+}
+interface WinningConditionStrategy << interface >> {
+  + checkWinningConditions(Game): Outcome<Boolean>
+}
+entity data  Data << data >> {
+  + Data(String): 
+   field: String
+}
+entity data  Eat << data >> {
+  + Eat(Piece, Vector, Piece): 
+   position: Vector
+   piece: Piece
+   eater: Piece
+}
+entity data  FailedOutcome<T> << data >> {
+  + FailedOutcome(String): 
+   error: String
+}
+entity data  InitialGameData << data >> {
+  + InitialGameData(InitialState, GetPieceFromTypeInStringFormat): 
+   pieceType: GetPieceFromTypeInStringFormat
+   game: InitialState
+}
+entity data  Move << data >> {
+  + Move(Piece, Vector, Vector): 
+   from: Vector
+   piece: Piece
+   too: Vector
+}
+entity data  MovePayload << data >> {
+  + MovePayload(String, Vector, Vector): 
+   clientId: String
+   from: Vector
+   destiny: Vector
+}
+entity data  Movement << data >> {
+  + Movement(MovementValidator, MovementPerformer): 
+   performer: MovementPerformer
+   validator: MovementValidator
+}
+entity data  MovementFailed << data >> {
+  + MovementFailed(String): 
+   message: String
+}
+entity data  MovementResult << data >> {
+  + MovementResult(Int, Board, List<MovementEvent>): 
+   movementIdentifier: Int
+   movementEvents: List<MovementEvent>
+   newBoard: Board
+}
+entity data  MovementSuccessful << data >> {
+  + MovementSuccessful(Game): 
+   newGameState: Game
+}
+entity data  PlayerWon << data >> {
+  + PlayerWon(Player): 
+   player: Player
+}
+entity data  Promotion << data >> {
+  + Promotion(Piece, Piece, Vector): 
+   position: Vector
+   oldPiece: Piece
+   newPiece: Piece
+}
+entity data  SendMessageToClient<T> << data >> {
+  + SendMessageToClient(String, String, T): 
+   clientId: String
+   payload: T
+   type: String
+}
+entity data  SuccessfulOutcome<T> << data >> {
+  + SuccessfulOutcome(T): 
+   data: T
+}
+
+AndUnionMovementValidator           "1" *-[#595959,plain]-> "strategies\n*" MovementValidator                   
+AndUnionMovementValidator            -[#008200,dashed]-^  UnionMovementValidator              
+AuxMethodsKt                         -[#595959,dashed]->  Vector                              : "«create»"
+BaseBoardFiller                      -[#595959,dashed]->  BasicPiece                          : "«create»"
+BaseBoardFiller                      -[#008200,dashed]-^  BoardFiller                         
+BaseBoardFiller                      -[#595959,dashed]->  RowFillerWithPieceType              : "«create»"
+BaseBoardFiller                      -[#595959,dashed]->  Vector                              : "«create»"
+BaseMovementManagerController        -[#008200,dashed]-^  MovementManagerController           
+BaseMovementManagerController       "1" *-[#595959,plain]-> "managerUpdaters\n*" UpdateMovementManagerOverEvent      
+BasicChessFactory                    -[#595959,dashed]->  BaseBoardFiller                     : "«create»"
+BasicChessFactory                    -[#595959,dashed]->  BasicEatingRuler                    : "«create»"
+BasicChessFactory                    -[#595959,dashed]->  CheckmateWinningCondition           : "«create»"
+BasicChessFactory                    -[#595959,dashed]->  ChessGame                           : "«create»"
+BasicChessFactory                    -[#595959,dashed]->  CircleTurnController                : "«create»"
+BasicChessFactory                    -[#008200,dashed]-^  GameFactory                         
+BasicChessFactory                    -[#595959,dashed]->  MulticolorPlayer                    : "«create»"
+BasicChessFactory                    -[#595959,dashed]->  RectangularBoardBuilder             : "«create»"
+BasicChessMovements                  -[#595959,dashed]->  BaseMovementManagerController       : "«create»"
+BasicChessMovements                  -[#008200,dashed]-^  GameMovementsFactory                
+BasicChessMovements                  -[#595959,dashed]->  PieceTypeMovementManager            : "«create»"
+BasicChessMovements                  -[#595959,dashed]->  data  Movement                      : "«create»"
+BasicEatingRuler                     -[#008200,dashed]-^  PieceEatingRuler                    
+BasicPiece                           -[#008200,dashed]-^  Piece                               
+BishopMovementStrategy               -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+BishopMovementStrategy               -[#008200,dashed]-^  MovementStrategyFactory             
+BoardGame                            -[#595959,dashed]->  FromPieceTypeToString               : "«create»"
+BoardGame                            -[#595959,dashed]->  GameEngineAdapter                   : "«create»"
+CastlingPerformer                    -[#008200,dashed]-^  MovementPerformer                   
+CastlingPerformer                    -[#595959,dashed]->  Vector                              : "«create»"
+CastlingPerformer                    -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+CastlingPerformer                    -[#595959,dashed]->  data  Move                          : "«create»"
+CastlingPerformer                    -[#595959,dashed]->  data  MovementResult                : "«create»"
+CastlingPerformer                    -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+CastlingValidator                    -[#008200,dashed]-^  MovementValidator                   
+CastlingValidator                    -[#595959,dashed]->  Vector                              : "«create»"
+CheckConditionKt                     -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+CheckConditionKt                     -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+CheckVerticalPositive                -[#008200,dashed]-^  MovementValidator                   
+CheckerMovement                      -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+CheckerMovement                      -[#595959,dashed]->  DistanceLimitMovement               : "«create»"
+CheckerMovement                      -[#008200,dashed]-^  MovementStrategyFactory             
+CheckersBoardFiller                  -[#595959,dashed]->  BasicPiece                          : "«create»"
+CheckersBoardFiller                  -[#008200,dashed]-^  BoardFiller                         
+CheckersBoardFiller                  -[#595959,dashed]->  Vector                              : "«create»"
+CheckersFactory                      -[#595959,dashed]->  BasicEatingRuler                    : "«create»"
+CheckersFactory                      -[#595959,dashed]->  CheckersGame                        : "«create»"
+CheckersFactory                      -[#595959,dashed]->  CircleTurnController                : "«create»"
+CheckersFactory                      -[#008200,dashed]-^  GameFactory                         
+CheckersFactory                      -[#595959,dashed]->  MulticolorPlayer                    : "«create»"
+CheckersFactory                      -[#595959,dashed]->  OrUnionWiningCondition              : "«create»"
+CheckersFactory                      -[#595959,dashed]->  OtherPlayerNoMovementsWC            : "«create»"
+CheckersFactory                      -[#595959,dashed]->  RectangularBoardBuilder             : "«create»"
+CheckersFactory                      -[#595959,dashed]->  TotalAnnihilationWinningCondition   : "«create»"
+CheckersGame                        "1" *-[#595959,plain]-> "board\n1" Board                               
+CheckersGame                         -[#008200,dashed]-^  Game                                
+CheckersGame                        "1" *-[#595959,plain]-> "movementManager\n1" MovementManager                     
+CheckersGame                        "1" *-[#595959,plain]-> "movementManagerController\n1" MovementManagerController           
+CheckersGame                        "1" *-[#595959,plain]-> "actualPiece\n1" Piece                               
+CheckersGame                        "1" *-[#595959,plain]-> "pieceEatingRuler\n1" PieceEatingRuler                    
+CheckersGame                        "1" *-[#595959,plain]-> "actualPlayer\n1" Player                              
+CheckersGame                        "1" *-[#595959,plain]-> "turnsController\n1" TurnsController                     
+CheckersGame                        "1" *-[#595959,plain]-> "winningCondition\n1" WinningConditionStrategy            
+CheckersGame                         -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+CheckersGame                         -[#595959,dashed]->  data  MovementFailed                : "«create»"
+CheckersGame                         -[#595959,dashed]->  data  MovementSuccessful            : "«create»"
+CheckersGame                         -[#595959,dashed]->  data  PlayerWon                     : "«create»"
+CheckersGame                         -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+CheckersMovementsFactory             -[#595959,dashed]->  BaseMovementManagerController       : "«create»"
+CheckersMovementsFactory             -[#008200,dashed]-^  GameMovementsFactory                
+CheckersMovementsFactory             -[#595959,dashed]->  PerformMovementAndPromoteIfPossible : "«create»"
+CheckersMovementsFactory             -[#595959,dashed]->  PieceTypeMovementManager            : "«create»"
+CheckersMovementsFactory             -[#595959,dashed]->  data  Movement                      : "«create»"
+CheckmateWinningCondition            -[#595959,dashed]->  ChessGame                           : "«create»"
+CheckmateWinningCondition            -[#008200,dashed]-^  WinningConditionStrategy            
+CheckmateWinningCondition            -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+CheckmateWinningCondition            -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+ChessGame                           "1" *-[#595959,plain]-> "board\n1" Board                               
+ChessGame                            -[#008200,dashed]-^  Game                                
+ChessGame                           "1" *-[#595959,plain]-> "movementManager\n1" MovementManager                     
+ChessGame                           "1" *-[#595959,plain]-> "movementManagerController\n1" MovementManagerController           
+ChessGame                           "1" *-[#595959,plain]-> "pieceEatingRuler\n1" PieceEatingRuler                    
+ChessGame                           "1" *-[#595959,plain]-> "actualPlayer\n1" Player                              
+ChessGame                           "1" *-[#595959,plain]-> "turnsController\n1" TurnsController                     
+ChessGame                           "1" *-[#595959,plain]-> "winningCondition\n1" WinningConditionStrategy            
+ChessGame                            -[#595959,dashed]->  data  MovementFailed                : "«create»"
+ChessGame                            -[#595959,dashed]->  data  MovementSuccessful            : "«create»"
+ChessGame                            -[#595959,dashed]->  data  PlayerWon                     : "«create»"
+CircleTurnController                "1" *-[#595959,plain]-> "circle\n*" Player                              
+CircleTurnController                 -[#008200,dashed]-^  TurnsController                     
+CircleTurnController                 -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+CircleTurnController                 -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+ClientConnectedAsPlayer             "1" *-[#595959,plain]-> "gameClient\n1" ClientGame                          
+ClientGame                           -[#595959,dashed]->  ClientConnectedAsPlayer             : "«create»"
+ClientGame                           -[#595959,dashed]->  Vector                              : "«create»"
+ClientGame                           -[#595959,dashed]->  data  MovePayload                   : "«create»"
+ClientPlayerRegistry                "1" *-[#595959,plain]-> "players\n*" Player                              
+ClientPlayerRegistry                "1" *-[#595959,plain]-> "serverGame\n1" ServerGameAdapter                   
+ClientPlayerRegistry                 -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+ClientPlayerRegistry                 -[#595959,dashed]->  data  SendMessageToClient           : "«create»"
+ClientPlayerRegistry                 -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+Diagonal2Slots                       -[#008200,dashed]-^  MovementValidator                   
+DiagonalMovement                     -[#008200,dashed]-^  MovementValidator                   
+DiagonalMovement                     -[#008200,dashed]-^  MovementValidator                   
+DiagonalMovement                     -[#595959,dashed]->  Vector                              : "«create»"
+DistanceLimitMovement                -[#008200,dashed]-^  MovementValidator                   
+DistanceLimitMovement                -[#008200,dashed]-^  MovementValidator                   
+DontEatInDestini                     -[#008200,dashed]-^  MovementValidator                   
+EatCheckerMovement                   -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+EatCheckerMovement                   -[#008200,dashed]-^  MovementStrategyFactory             
+EatInDestini                         -[#008200,dashed]-^  MovementValidator                   
+EatNormalMovement                    -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+EatNormalMovement                    -[#008200,dashed]-^  MovementStrategyFactory             
+EatPieceInMiddle                     -[#008200,dashed]-^  MovementValidator                   
+EmptyDestination                     -[#008200,dashed]-^  MovementValidator                   
+EmptyOrEatEnemyInDestiny             -[#008200,dashed]-^  MovementValidator                   
+ExampleMainKt                        -[#595959,dashed]->  ClientGameConnectionListener        : "«create»"
+ExampleMainKt                        -[#595959,dashed]->  MessageCollectorListener            : "«create»"
+ExampleMainKt                        -[#595959,dashed]->  ServerGameConnectionListener        : "«create»"
+ExampleMainKt                        -[#595959,dashed]->  data  Data                          : "«create»"
+FromPieceTypeToString                -[#008200,dashed]-^  GetPieceFromTypeInStringFormat      
+FromPieceTypeToString                -[#008200,dashed]-^  GetPieceFromTypeInStringFormat      
+FromTooMovementPerformer             -[#008200,dashed]-^  MovementPerformer                   
+FromTooMovementPerformer             -[#595959,dashed]->  data  Eat                           : "«create»"
+FromTooMovementPerformer             -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+FromTooMovementPerformer             -[#595959,dashed]->  data  Move                          : "«create»"
+FromTooMovementPerformer             -[#595959,dashed]->  data  MovementResult                : "«create»"
+FromTooMovementPerformer             -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+GameEngineAdapter                   "1" *-[#595959,plain]-> "game\n1" Game                                
+GameEngineAdapter                   "1" *-[#595959,plain]-> "pieceTypeToString\n1" GetPieceFromTypeInStringFormat      
+GameEngineAdapter                    -[#595959,dashed]->  Vector                              : "«create»"
+HorizontalMovement                   -[#008200,dashed]-^  MovementValidator                   
+HorizontalMovement                   -[#595959,dashed]->  Vector                              : "«create»"
+JumpAndEatPerformer                  -[#008200,dashed]-^  MovementPerformer                   
+JumpAndEatPerformer                  -[#595959,dashed]->  data  Eat                           : "«create»"
+JumpAndEatPerformer                  -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+JumpAndEatPerformer                  -[#595959,dashed]->  data  Move                          : "«create»"
+JumpAndEatPerformer                  -[#595959,dashed]->  data  MovementResult                : "«create»"
+JumpAndEatPerformer                  -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+KingMovementStrategy                 -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+KingMovementStrategy                 -[#595959,dashed]->  DistanceLimitMovement               : "«create»"
+KingMovementStrategy                 -[#008200,dashed]-^  MovementStrategyFactory             
+KnightMovementStrategy               -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+KnightMovementStrategy               -[#008200,dashed]-^  MovementStrategyFactory             
+LJumpMovement                        -[#008200,dashed]-^  MovementValidator                   
+MapBoard                             -[#008200,dashed]-^  Board                               
+MapBoard                            "1" *-[#595959,plain]-> "board\n*" Piece                               
+MapBoard                            "1" *-[#595959,plain]-> "board\n*" Vector                              
+MapBoard                             -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+MapBoard                             -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+MulticolorPlayer                     -[#008200,dashed]-^  Player                              
+NoPieceCanEat                        -[#008200,dashed]-^  MovementValidator                   
+NormalPieceMovement                  -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+NormalPieceMovement                  -[#008200,dashed]-^  MovementStrategyFactory             
+OrUnionMovementValidator             -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+OrUnionMovementValidator            "1" *-[#595959,plain]-> "strategies\n*" MovementValidator                   
+OrUnionMovementValidator             -[#008200,dashed]-^  UnionMovementValidator              
+OrUnionWiningCondition              "1" *-[#595959,plain]-> "wcs\n*" WinningConditionStrategy            
+OrUnionWiningCondition               -[#008200,dashed]-^  WinningConditionStrategy            
+OrUnionWiningCondition               -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+OtherPlayerNoMovementsWC             -[#008200,dashed]-^  WinningConditionStrategy            
+OtherPlayerNoMovementsWC             -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+PawnMovementStrategy                 -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+PawnMovementStrategy                 -[#595959,dashed]->  DistanceLimitMovement               : "«create»"
+PawnMovementStrategy                 -[#008200,dashed]-^  MovementStrategyFactory             
+PawnMovementStrategy                 -[#595959,dashed]->  OrUnionMovementValidator            : "«create»"
+PerformMovementAndPromoteIfPossible  -[#595959,dashed]->  BasicPiece                          : "«create»"
+PerformMovementAndPromoteIfPossible "1" *-[#595959,plain]-> "movementP\n1" MovementPerformer                   
+PerformMovementAndPromoteIfPossible  -[#008200,dashed]-^  MovementPerformer                   
+PerformMovementAndPromoteIfPossible  -[#595959,dashed]->  Vector                              : "«create»"
+PerformMovementAndPromoteIfPossible  -[#595959,dashed]->  data  MovementResult                : "«create»"
+PerformMovementAndPromoteIfPossible  -[#595959,dashed]->  data  Promotion                     : "«create»"
+PerformMovementAndPromoteIfPossible  -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+PieceTypeMovementManager             -[#008200,dashed]-^  MovementManager                     
+PieceTypeMovementManager             -[#595959,dashed]->  data  FailedOutcome                 : "«create»"
+PieceTypeMovementManager             -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+PrincessMovementStrategy             -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+PrincessMovementStrategy             -[#595959,dashed]->  DistanceLimitMovement               : "«create»"
+PrincessMovementStrategy             -[#008200,dashed]-^  MovementStrategyFactory             
+QueenMovementStrategy                -[#008200,dashed]-^  MovementStrategyFactory             
+QueenMovementStrategy                -[#595959,dashed]->  OrUnionMovementValidator            : "«create»"
+RebellionBoardFiller                 -[#595959,dashed]->  BasicPiece                          : "«create»"
+RebellionBoardFiller                 -[#008200,dashed]-^  BoardFiller                         
+RebellionBoardFiller                 -[#595959,dashed]->  RowFillerWithPieceType              : "«create»"
+RebellionBoardFiller                 -[#595959,dashed]->  Vector                              : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  BasicEatingRuler                    : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  ChessGame                           : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  CircleTurnController                : "«create»"
+RebellionChessFactory                -[#008200,dashed]-^  GameFactory                         
+RebellionChessFactory                -[#595959,dashed]->  MulticolorPlayer                    : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  RebellionBoardFiller                : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  RectangularBoardBuilder             : "«create»"
+RebellionChessFactory                -[#595959,dashed]->  TotalAnnihilationWinningCondition   : "«create»"
+RebellionChessMovements              -[#595959,dashed]->  BaseMovementManagerController       : "«create»"
+RebellionChessMovements              -[#008200,dashed]-^  GameMovementsFactory                
+RebellionChessMovements              -[#595959,dashed]->  PieceTypeMovementManager            : "«create»"
+RebellionChessMovements              -[#595959,dashed]->  data  Movement                      : "«create»"
+RectangularBoardBuilder              -[#008200,dashed]-^  BoardFactory                        
+RectangularBoardBuilder              -[#595959,dashed]->  MapBoard                            : "«create»"
+RectangularBoardBuilder              -[#595959,dashed]->  Vector                              : "«create»"
+RookMovementStrategy                 -[#595959,dashed]->  AndUnionMovementValidator           : "«create»"
+RookMovementStrategy                 -[#008200,dashed]-^  MovementStrategyFactory             
+RookMovementStrategy                 -[#595959,dashed]->  OrUnionMovementValidator            : "«create»"
+RowFillerWithPieceType               -[#595959,dashed]->  BasicPiece                          : "«create»"
+RowFillerWithPieceType               -[#008200,dashed]-^  BoardFiller                         
+RowFillerWithPieceType               -[#595959,dashed]->  Vector                              : "«create»"
+ServerGameAdapter                    -[#595959,dashed]->  ClientPlayerRegistry                : "«create»"
+ServerGameAdapter                   "1" *-[#595959,plain]-> "playerRegistry\n1" ClientPlayerRegistry                
+ServerGameAdapter                   "1" *-[#595959,plain]-> "game\n1" Game                                
+ServerMainKt                         -[#595959,dashed]->  ServerGameAdapter                   : "«create»"
+TotalAnnihilationWinningCondition    -[#008200,dashed]-^  WinningConditionStrategy            
+TotalAnnihilationWinningCondition    -[#008200,dashed]-^  WinningConditionStrategy            
+TotalAnnihilationWinningCondition    -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+TotalAnnihilationWinningCondition    -[#595959,dashed]->  data  SuccessfulOutcome             : "«create»"
+UnionMovementValidator               -[#008200,plain]-^  MovementValidator                   
+ValidateAdvancing                    -[#008200,dashed]-^  MovementValidator                   
+VerticalMovement                     -[#008200,dashed]-^  MovementValidator                   
+VerticalMovement                     -[#595959,dashed]->  Vector                              : "«create»"
+data  Eat                            -[#008200,dashed]-^  MovementEvent                       
+data  Eat                           "1" *-[#595959,plain]-> "piece\n1" Piece                               
+data  Eat                           "1" *-[#595959,plain]-> "position\n1" Vector                              
+data  FailedOutcome                  -[#008200,dashed]-^  Outcome                             
+data  InitialGameData               "1" *-[#595959,plain]-> "pieceType\n1" GetPieceFromTypeInStringFormat      
+data  Move                           -[#008200,dashed]-^  MovementEvent                       
+data  Move                          "1" *-[#595959,plain]-> "piece\n1" Piece                               
+data  Move                          "1" *-[#595959,plain]-> "from\n1" Vector                              
+data  MovePayload                   "1" *-[#595959,plain]-> "from\n1" Vector                              
+data  Movement                      "1" *-[#595959,plain]-> "performer\n1" MovementPerformer                   
+data  Movement                      "1" *-[#595959,plain]-> "validator\n1" MovementValidator                   
+data  MovementFailed                 -[#008200,dashed]-^  GameMovementResult                  
+data  MovementResult                "1" *-[#595959,plain]-> "newBoard\n1" Board                               
+data  MovementResult                "1" *-[#595959,plain]-> "movementEvents\n*" MovementEvent                       
+data  MovementSuccessful            "1" *-[#595959,plain]-> "newGameState\n1" Game                                
+data  MovementSuccessful             -[#008200,dashed]-^  GameMovementResult                  
+data  PlayerWon                      -[#008200,dashed]-^  GameMovementResult                  
+data  PlayerWon                     "1" *-[#595959,plain]-> "player\n1" Player                              
+data  Promotion                      -[#008200,dashed]-^  MovementEvent                       
+data  Promotion                     "1" *-[#595959,plain]-> "oldPiece\n1" Piece                               
+data  Promotion                     "1" *-[#595959,plain]-> "position\n1" Vector                              
+data  SendMessageToClient            -[#008200,dashed]-^  ClientPlayerRegistryNotification    
+data  SuccessfulOutcome              -[#008200,dashed]-^  Outcome                             
+@enduml
