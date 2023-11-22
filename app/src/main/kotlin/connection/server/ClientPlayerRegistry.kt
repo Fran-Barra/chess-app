@@ -27,7 +27,9 @@ class ClientPlayerRegistry(val serverGame: ServerGameAdapter, val players: List<
     }
 
     override fun handleClientConnectionClosed(clientId: String) {
-        TODO("Not yet implemented")
+        if (getPlayer(clientId) is SuccessfulOutcome) {
+            serverGame.playerDisconnected(clientId)
+        }
     }
 
     fun getPlayer(clientId: String): Outcome<Player> {

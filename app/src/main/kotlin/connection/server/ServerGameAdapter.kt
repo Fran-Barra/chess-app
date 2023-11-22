@@ -78,6 +78,15 @@ class ServerGameAdapter(private var game: Game, private val pieceType: GetPieceF
             StartConnectionData(clientId, getInitialState(game, pieceType))
         ))
     }
+
+    fun playerDisconnected(playerId: String) {
+        //TODO: if possible say what player disconnected and show a won message in case they are two.
+        server.broadcast(Message(
+            MessageTypeByServer.DISPLAY_MESSAGE.toString(),
+            InvalidMove("A player disconnected, the server will turn off"))
+        )
+        server.stop()
+    }
 }
 
 data class MovePayload(val clientId: String, val from: Vector, val destiny: Vector)
