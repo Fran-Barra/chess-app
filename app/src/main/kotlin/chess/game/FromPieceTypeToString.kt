@@ -1,19 +1,16 @@
 package chess.game
 
-import boardGame.game.GetPieceFromTypeInStringFormat
-import boardGame.piece.Piece
+import boardGame.game.PieceToString
 
-class FromPieceTypeToString: GetPieceFromTypeInStringFormat {
-    override fun getPieceTypeInStringFormat(piece: Piece): String{
-        return when (piece.getPieceType()) {
-            0 -> "king"
-            1 -> "queen"
-            2 -> "bishop"
-            3 -> "knight"
-            4 -> "rook"
-            5 -> "pawn"
-            6 -> "archbishop"
-            else -> "ghost"
-        }
-    }
-}
+val chessPieceToString = PieceToString(
+    mapOf(
+        Pair(0, "king"),
+        Pair(1, "queen"),
+        Pair(2, "bishop"),
+        Pair(3, "knignt"),
+        Pair(4, "rook"),
+        Pair(5, "pawn"),
+        Pair(6, "archbishop"),
+    ),
+    "Ghost"
+)
