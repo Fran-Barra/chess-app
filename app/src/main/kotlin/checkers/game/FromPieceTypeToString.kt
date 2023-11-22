@@ -1,14 +1,12 @@
 package checkers.game
 
-import boardGame.game.GetPieceFromTypeInStringFormat
-import boardGame.piece.Piece
+import boardGame.game.PieceToString
 
-class FromPieceTypeToString: GetPieceFromTypeInStringFormat {
-    override fun getPieceTypeInStringFormat(piece: Piece): String {
-        return when (piece.getPieceType()){
-            0 -> "queen"
-            1 -> "pawn"
-            else -> "ghost"
-        }
-    }
-}
+
+val checkersIdToString = PieceToString(
+    mapOf(
+        Pair(0, "queen"),
+        Pair(1, "pawn")
+    ),
+    "Pawn"
+)
