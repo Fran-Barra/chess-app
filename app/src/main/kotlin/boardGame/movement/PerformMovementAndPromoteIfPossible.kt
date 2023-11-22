@@ -22,8 +22,7 @@ class PerformMovementAndPromoteIfPossible(private val movementP: MovementPerform
 
         if (!isAbleToPromote(piece, result.newBoard, too)) return SuccessfulOutcome(result)
 
-        TODO("This shit is not working")
-        val promotedPiece = BasicPiece(0, piece.getPieceColor())
+        val promotedPiece = BasicPiece(0, piece.getPieceColor(), piece.getPieceId())
         val newBoard: Board = result.newBoard.addPiece(promotedPiece, too)
 
         val events: List<MovementEvent> = result.movementEvents + listOf<MovementEvent>(Promotion(piece, promotedPiece, too))

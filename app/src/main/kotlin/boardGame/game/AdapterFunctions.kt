@@ -55,7 +55,7 @@ fun fromGameToListPieces(game: Game, pieceTypeToString: GetPieceFromTypeInString
 
 private fun fromPieceToChessPiece(piece: Piece, vec: Vector, pieceTypeToString: GetPieceFromTypeInStringFormat): ChessPiece{
     return ChessPiece(
-        piece.toString(),
+        piece.getPieceId().toString(),
         fromPieceGetPlayerColor(piece),
         fromVectorToPos(vec),
         pieceTypeToString.getPieceTypeInStringFormat(piece))
