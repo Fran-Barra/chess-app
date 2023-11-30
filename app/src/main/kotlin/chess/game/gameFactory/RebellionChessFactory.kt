@@ -3,21 +3,21 @@ package chess.game.gameFactory
 import boardGame.board.Board
 import chess.boardFactories.RebellionBoardFiller
 import boardGame.board.boardFactory.RectangularBoardBuilder
+import boardGame.game.BaseGame
+import boardGame.game.Game
 import boardGame.game.GameFactory
 import boardGame.movement.MovementManager
 import boardGame.movement.MovementManagerController
-import chess.game.ChessGame
-import boardGame.movement.MovementValidator
 import chess.movementStrategy.gameMovementsFactory.RebellionChessMovements
-import boardGame.piece.Piece
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
+import chess.game.ForEveryMovementNextTurn
 import chess.winningConditionStrategy.TotalAnnihilationWinningCondition
 
 object RebellionChessFactory: GameFactory {
-    override fun getGame(): ChessGame {
+    override fun getGame(): Game {
         val players: List<Player> = listOf<Player>(
             MulticolorPlayer(0, listOf(0)),
             MulticolorPlayer(1, listOf(1))
@@ -28,10 +28,9 @@ object RebellionChessFactory: GameFactory {
         val movementsManager: MovementManager = RebellionChessMovements.getMovementsManager()
         val movementsManagerController: MovementManagerController = RebellionChessMovements.getMovementsManagerController()
 
-        return ChessGame(
+        return BaseGame(
             board,
-            players[0],
-            CircleTurnController(players, 1),
+            CircleTurnController(players, 0, ForEveryMovementNextTurn()),
             BasicEatingRuler(),
             movementsManager,
             movementsManagerController,

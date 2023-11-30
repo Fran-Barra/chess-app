@@ -1,5 +1,6 @@
 package boardGame.game
 
+import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.movement.MovementManager
@@ -8,10 +9,9 @@ import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController
 import boardGame.winningConditionStrategy.WinningConditionStrategy
-import chess.game.ChessGame
 
 interface Game {
-    fun getActualPlayer(): Player
+    fun getActualPlayer(): Outcome<Player>
     fun getBoard(): Board
     fun getMovementManager(): MovementManager
     fun getMovementManagerController(): MovementManagerController

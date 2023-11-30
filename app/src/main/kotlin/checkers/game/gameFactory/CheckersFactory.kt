@@ -3,6 +3,7 @@ package checkers.game.gameFactory
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.board.boardFactory.RectangularBoardBuilder
+import boardGame.game.BaseGame
 import boardGame.game.Game
 import boardGame.game.GameFactory
 import boardGame.movement.MovementManager
@@ -13,8 +14,7 @@ import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
 import boardGame.winningConditionStrategy.OrUnionWiningCondition
-import checkers.boardFactory.CheckersBoardFiller
-import checkers.game.CheckersGame
+import checkers.game.IfNoKillNextTurn
 import checkers.movement.gameMovementsFactory.CheckersMovementsFactory
 import checkers.winningCondition.OtherPlayerNoMovementsWC
 import checkers.winningCondition.TotalAnnihilationWinningCondition
@@ -32,9 +32,9 @@ object CheckersFactory: GameFactory {
         val movements: MovementManager = CheckersMovementsFactory.getMovementsManager()
         val movementsController: MovementManagerController = CheckersMovementsFactory.getMovementsManagerController()
 
-        return CheckersGame(board, players[0],
-            null,
-            CircleTurnController(players, 1),
+        return BaseGame(
+            board,
+            CircleTurnController(players, 0, IfNoKillNextTurn()),
             BasicEatingRuler(),
             movements,
             movementsController,

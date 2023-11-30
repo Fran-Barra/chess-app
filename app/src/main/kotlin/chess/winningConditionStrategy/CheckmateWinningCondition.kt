@@ -11,7 +11,6 @@ import boardGame.movement.MovementResult
 import boardGame.piece.Piece
 import boardGame.player.Player
 import boardGame.winningConditionStrategy.WinningConditionStrategy
-import chess.game.ChessGame
 
 
 //TODO: clean up code
