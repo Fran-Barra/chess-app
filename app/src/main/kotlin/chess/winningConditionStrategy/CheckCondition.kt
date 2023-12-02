@@ -45,8 +45,13 @@ private fun isPositionOnCheck(toCheckPiece: Piece, toCheckPiecePosition: Vector,
 //TODO: consider special cases: the one that say that the movement is available but dont move to that place.
 private fun canPieceMoveToToCheckPiecePosition(piecePosition: Vector, destiny: Vector,
                                                game: Game): Boolean {
+    //TODO: consider doing something different in case is false
+    val actualPlayer = when (val outcome = game.getActualPlayer()) {
+        is SuccessfulOutcome -> outcome.data
+        is FailedOutcome -> return false
+    }
     val movementPerformer = when (val outcome = game.getMovementManager().findValidMovementPerformer(
-        game.getPieceEatingRuler(), game.getActualPlayer(), piecePosition, destiny, game.getBoard())
+        game.getPieceEatingRuler(), actualPlayer, piecePosition, destiny, game.getBoard())
     ){
         is SuccessfulOutcome -> outcome.data
         is FailedOutcome -> return false

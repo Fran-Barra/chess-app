@@ -5,6 +5,7 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.BaseGame
 import boardGame.game.Game
 import boardGame.movement.MovementPerformer
 import boardGame.movement.MovementResult
@@ -17,8 +18,11 @@ import boardGame.winningConditionStrategy.WinningConditionStrategy
 //TODO: Also consider that a player can control multiple colors
 class CheckmateWinningCondition: WinningConditionStrategy {
     override fun checkWinningConditions(game: Game): Outcome<Boolean> {
-
-        val pieceToCheck: Piece = when (val outcome = findPieceToCheck(game.getBoard(), game.getActualPlayer(), 0)) {
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return FailedOutcome(outcome.error)
+        }
+        val pieceToCheck: Piece = when (val outcome = findPieceToCheck(game.getBoard(), actualPlayer, 0)) {
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
@@ -50,9 +54,14 @@ class CheckmateWinningCondition: WinningConditionStrategy {
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
 
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return FailedOutcome(outcome.error)
+        }
+
         for ((position, _) in game.getBoard().getBoardAssList()) {
             val movementPerformer: MovementPerformer = when (val outcome = game.getMovementManager()
-                .findValidMovementPerformer(game.getPieceEatingRuler(), game.getActualPlayer(), pieceToCheckPos,
+                .findValidMovementPerformer(game.getPieceEatingRuler(), actualPlayer, pieceToCheckPos,
                     position, game.getBoard())) {
                 is SuccessfulOutcome -> outcome.data
                 is FailedOutcome -> continue
@@ -100,10 +109,15 @@ class CheckmateWinningCondition: WinningConditionStrategy {
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
 
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return FailedOutcome(outcome.error)
+        }
+
         for ((position: Vector, _) in game.getBoard().getBoardAssList()){
             if (position == pieceToCheckPos) continue
             val movementPerformer: MovementPerformer = when (val outcome = game.getMovementManager()
-                .findValidMovementPerformer(game.getPieceEatingRuler(), game.getActualPlayer(), pieceToCheckPos,
+                .findValidMovementPerformer(game.getPieceEatingRuler(), actualPlayer, pieceToCheckPos,
                     position, game.getBoard())) {
                 is SuccessfulOutcome -> outcome.data
                 is FailedOutcome -> continue
@@ -164,16 +178,13 @@ class CheckmateWinningCondition: WinningConditionStrategy {
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
 
-        val oldTurnController = game.getTurnController()
-        val newTurnState = when (val outcome = oldTurnController.getNextPlayerTurn()){
-            is SuccessfulOutcome -> outcome.data
-            is FailedOutcome -> return FailedOutcome(outcome.error)
-        }
+
 
         //TODO: modify movementManager given the events
 
         //TODO use new movementManager and new movementManagerController
-        return SuccessfulOutcome(ChessGame(movementResult.newBoard, newTurnState.first, newTurnState.second,
+        return SuccessfulOutcome(BaseGame(movementResult.newBoard,
+            game.getTurnController().updateTurnController(movementResult),
             game.getPieceEatingRuler(), game.getMovementManager(),
             game.getMovementManagerController(), game.getWinningConditions()
         ))

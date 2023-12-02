@@ -1,5 +1,6 @@
 package chess.winningConditionStrategy
 
+import FailedOutcome
 import Outcome
 import SuccessfulOutcome
 import boardGame.board.Vector
@@ -10,7 +11,11 @@ import boardGame.winningConditionStrategy.WinningConditionStrategy
 
 class TotalAnnihilationWinningCondition: WinningConditionStrategy {
     override fun checkWinningConditions(game: Game): Outcome<Boolean> {
-        return SuccessfulOutcome(getEnemyPieces(game.getBoard().getPiecesAndPosition(), game.getActualPlayer()).isEmpty())
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return FailedOutcome(outcome.error)
+        }
+        return SuccessfulOutcome(getEnemyPieces(game.getBoard().getPiecesAndPosition(), actualPlayer).isEmpty())
     }
 
     private fun getEnemyPieces(pieces: List<Pair<Piece, Vector>>, actualPlayer: Player): List<Piece> {

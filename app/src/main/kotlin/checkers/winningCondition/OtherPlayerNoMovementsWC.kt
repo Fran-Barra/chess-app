@@ -20,8 +20,12 @@ class OtherPlayerNoMovementsWC: WinningConditionStrategy {
     }
 
     private fun getPlayerPiecesPositions(game: Game): List<Vector> {
-        return game.getBoard().getPiecesAndPosition().filter { (p, _) ->
-            game.getActualPlayer().playerControlColor(p.getPieceColor())}
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return listOf()
+        }
+        return game.getBoard().getPiecesAndPosition().filter { (p: Piece, _) ->
+            actualPlayer.playerControlColor(p.getPieceColor())}
             .map { (_, v) -> v }
 
     }
@@ -29,9 +33,16 @@ class OtherPlayerNoMovementsWC: WinningConditionStrategy {
     private fun isPieceAbleToDoAnyMovement(piecePos: Vector, game: Game): Boolean {
         val positions: List<Vector> = game.getBoard().getBoardAssList().map { (p, _) -> p }
         val movementM: MovementManager = game.getMovementManager()
+
+        //TODO: consider doing something different here
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return false
+        }
+
         for (pos in positions) {
             if (movementM.findValidMovementPerformer(
-                    game.getPieceEatingRuler(), game.getActualPlayer(), piecePos, pos, game.getBoard()
+                    game.getPieceEatingRuler(), actualPlayer, piecePos, pos, game.getBoard()
             ) is SuccessfulOutcome) return true
         }
         return false

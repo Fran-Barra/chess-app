@@ -1,28 +1,40 @@
 package boardGame.game
 
+import FailedOutcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.piece.Piece
+import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import edu.austral.dissis.chess.gui.*
 
 //TODO: make an basic adapter class
 //TODO: make an Adapter builder that allows me to change the way things are calculated (the use of strategies)
-fun getInitialState(game: Game, pieceTypeToString: GetPieceFromTypeInStringFormat): InitialState =
-    InitialState(
+fun getInitialState(game: Game, pieceTypeToString: GetPieceFromTypeInStringFormat): InitialState {
+    val actualPlayer = when (val outcome = game.getActualPlayer()) {
+        is SuccessfulOutcome -> outcome.data
+        is FailedOutcome -> MulticolorPlayer(0, listOf())
+    }
+    return InitialState(
         getSquareBoardSize(game.getBoard()),
         fromGameToListPieces(game, pieceTypeToString),
-        fromPlayerToPlayerColor(game.getActualPlayer())
+        fromPlayerToPlayerColor(actualPlayer)
     )
+    }
 
 fun fromGameResultToMoveResult(gameResult: GameMovementResult, pieceTypeToString: GetPieceFromTypeInStringFormat): MoveResult {
     return when (gameResult) {
         is PlayerWon -> GameOver(fromPlayerToPlayerColor(gameResult.player))
         is MovementFailed -> InvalidMove(gameResult.message)
         is MovementSuccessful -> {
+            val actualPlayer = when (val outcome = gameResult.newGameState.getActualPlayer()) {
+                is SuccessfulOutcome -> outcome.data
+                is FailedOutcome -> return InvalidMove(outcome.error)
+            }
             NewGameState(fromGameToListPieces(
                 gameResult.newGameState, pieceTypeToString),
-                fromPlayerToPlayerColor(gameResult.newGameState.getActualPlayer())
+                fromPlayerToPlayerColor(actualPlayer)
             )
         }
     }

@@ -1,5 +1,7 @@
 package boardGame.game
 
+import FailedOutcome
+import SuccessfulOutcome
 import edu.austral.dissis.chess.gui.*
 
 //TODO: refactor this and make my own GameEngine / gameAdapter
@@ -9,9 +11,13 @@ class GameEngineAdapter(private var game: Game,
     override fun init(): InitialState = getInitialState(game, pieceTypeToString)
 
     override fun applyMove(move: Move): MoveResult {
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> return InvalidMove(outcome.error)
+        }
         return fromGameResultToMoveResult(
             game.makeMovement(
-                game.getActualPlayer(), fromPosToVector(move.from), fromPosToVector(move.to)
+                actualPlayer, fromPosToVector(move.from), fromPosToVector(move.to)
             )
         )
     }
@@ -22,7 +28,11 @@ class GameEngineAdapter(private var game: Game,
             is MovementFailed -> InvalidMove(gameResult.message)
             is MovementSuccessful -> {
                 game = gameResult.newGameState
-                NewGameState(fromGameToListPieces(game, pieceTypeToString), fromPlayerToPlayerColor(game.getActualPlayer()))
+                val actualPlayer = when (val outcome = game.getActualPlayer()) {
+                    is SuccessfulOutcome -> outcome.data
+                    is FailedOutcome -> return InvalidMove(outcome.error)
+                }
+                NewGameState(fromGameToListPieces(game, pieceTypeToString), fromPlayerToPlayerColor(actualPlayer))
             }
         }
     }
