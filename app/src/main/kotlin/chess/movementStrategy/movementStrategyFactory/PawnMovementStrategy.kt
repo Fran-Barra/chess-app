@@ -11,7 +11,7 @@ object PawnMovementStrategy: MovementStrategyFactory {
     private val strategy: MovementValidator by lazy {
         val con1 = AndUnionMovementValidator(listOf(CheckVerticalPositive, VerticalMovement, DontEatInDestini))
         val con2 = AndUnionMovementValidator(listOf(DiagonalMovement, EatInDestini))
-        AndUnionMovementValidator(listOf(OrUnionMovementValidator(listOf(con1, con2)), DistanceLimitMovement(2)))
+        AndUnionMovementValidator(listOf(OrUnionMovementValidator(listOf(con1, con2)), DistanceLimitMovement(1)))
     }
     override fun getMovementStrategy(): MovementValidator {
         return strategy
