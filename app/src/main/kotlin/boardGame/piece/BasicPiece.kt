@@ -1,9 +1,9 @@
 package boardGame.piece
 
-import java.util.*
+import IdGenerator
 
-class BasicPiece(private val type: Int, private val color: Int, private val ID: UUID = UUID.randomUUID()): Piece {
+class BasicPiece(private val type: Int, private val color: Int, private val ID: Int = IdGenerator.getNewId()): Piece {
     override fun getPieceType(): Int = type
     override fun getPieceColor(): Int = color
-    override fun getPieceId(): UUID = ID
+    override fun getPieceId(): Int = ID
 }

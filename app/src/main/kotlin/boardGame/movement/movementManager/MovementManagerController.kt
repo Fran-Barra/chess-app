@@ -1,6 +1,7 @@
-package boardGame.movement
+package boardGame.movement.movementManager
 
 import boardGame.game.Game
+import boardGame.movement.MovementResult
 
 
 interface MovementManagerController {

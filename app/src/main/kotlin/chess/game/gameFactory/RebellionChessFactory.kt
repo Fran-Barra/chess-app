@@ -6,8 +6,8 @@ import boardGame.board.boardFactory.RectangularBoardBuilder
 import boardGame.game.BaseGame
 import boardGame.game.Game
 import boardGame.game.GameFactory
-import boardGame.movement.MovementManager
-import boardGame.movement.MovementManagerController
+import boardGame.movement.movementManager.MovementManager
+import boardGame.movement.movementManager.MovementManagerController
 import chess.movementStrategy.gameMovementsFactory.RebellionChessMovements
 import boardGame.pieceEatingRuler.BasicEatingRuler
 import boardGame.player.MulticolorPlayer

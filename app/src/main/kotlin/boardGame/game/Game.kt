@@ -3,8 +3,8 @@ package boardGame.game
 import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
-import boardGame.movement.MovementManager
-import boardGame.movement.MovementManagerController
+import boardGame.movement.movementManager.MovementManager
+import boardGame.movement.movementManager.MovementManagerController
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 import boardGame.turnsController.TurnsController

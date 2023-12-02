@@ -5,7 +5,7 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Vector
 import boardGame.game.Game
-import boardGame.movement.MovementManager
+import boardGame.movement.movementManager.MovementManager
 import boardGame.piece.Piece
 import boardGame.winningConditionStrategy.WinningConditionStrategy
 

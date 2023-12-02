@@ -1,6 +1,7 @@
 package checkers.movement.gameMovementsFactory
 
 import boardGame.movement.*
+import boardGame.movement.movementManager.*
 import checkers.movement.performer.JumpAndEatPerformer
 import checkers.movement.validator.composedValidators.CheckerMovement
 import checkers.movement.validator.composedValidators.EatCheckerMovement
@@ -20,7 +21,7 @@ object CheckersMovementsFactory: GameMovementsFactory {
             ))
         )
 
-        return PieceTypeMovementManager(movements)
+        return IdMovementManager(movements, GetPieceTypeId())
     }
 
     override fun getMovementsManagerController(): MovementManagerController {

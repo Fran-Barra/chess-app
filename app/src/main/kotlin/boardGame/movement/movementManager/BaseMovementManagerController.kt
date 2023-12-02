@@ -1,9 +1,11 @@
-package boardGame.movement
+package boardGame.movement.movementManager
 
 import boardGame.game.Game
+import boardGame.movement.MovementResult
 
 //TODO: verify this logic and that a new Controller is not needed
-class BaseMovementManagerController(val managerUpdaters: List<UpdateMovementManagerOverEvent>): MovementManagerController {
+class BaseMovementManagerController(val managerUpdaters: List<UpdateMovementManagerOverEvent>):
+    MovementManagerController {
     override fun updateMovementManager(
         manager: MovementManager, event: MovementResult, oldGameState: Game
     ): MovementManager {

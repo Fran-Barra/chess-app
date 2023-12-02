@@ -1,14 +1,19 @@
-package boardGame.movement
+package boardGame.movement.movementManager
 
 import FailedOutcome
 import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.movement.MovementPerformer
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
-class PieceTypeMovementManager(private val pieceTypeMovements: Map<Int, List<Movement>>): MovementManager {
+class IdMovementManager(
+    private val idsMovements: Map<Int, List<Movement>>,
+    private val idGetter: GetIdStrategy
+) : MovementManager {
+
     override fun findValidMovementPerformer(
         pieceEatingRuler: PieceEatingRuler,
         player: Player,
@@ -16,18 +21,18 @@ class PieceTypeMovementManager(private val pieceTypeMovements: Map<Int, List<Mov
         destination: Vector,
         board: Board
     ): Outcome<MovementPerformer> {
-        val pieceType: Int = when (val outcome = board.getPieceInPosition(actual)) {
-            is SuccessfulOutcome -> outcome.data.getPieceType()
+        val id: Int = when (val outcome = idGetter.getId(player, actual, destination, board)) {
+            is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
 
-        val pieceTypeMovements: List<Movement> = pieceTypeMovements[pieceType]?:
+        val movementsOfId: List<Movement> = idsMovements[id]?:
             return FailedOutcome("This piece type don't have movements")
 
-        if (pieceTypeMovements.isEmpty())
+        if (movementsOfId.isEmpty())
             return FailedOutcome("This piece type don't have movements")
 
-        for (movement in pieceTypeMovements) {
+        for (movement in movementsOfId) {
             if (!movement.validator.validate(pieceEatingRuler, player, actual, destination, board)) continue
             return SuccessfulOutcome(movement.performer)
         }
@@ -35,18 +40,22 @@ class PieceTypeMovementManager(private val pieceTypeMovements: Map<Int, List<Mov
     }
 
     override fun addMovement(id: Int, movement: Movement): MovementManager {
-        val newMap: MutableMap<Int, List<Movement>> = pieceTypeMovements.toMutableMap()
+        val newMap: MutableMap<Int, List<Movement>> = idsMovements.toMutableMap()
         val movementList = newMap[id] ?: emptyList()
         val updatedList = movementList + movement
         newMap[id] = updatedList
-        return PieceTypeMovementManager(newMap)
+        return IdMovementManager(newMap, idGetter)
     }
 
     override fun removeMovement(id: Int, movement: Movement): MovementManager {
-        val newMap: MutableMap<Int, List<Movement>> = pieceTypeMovements.toMutableMap()
+        val newMap: MutableMap<Int, List<Movement>> = idsMovements.toMutableMap()
         val movementList = newMap[id] ?: emptyList()
         val updatedList = movementList - movement
         newMap[id] = updatedList
-        return PieceTypeMovementManager(newMap)
+        return IdMovementManager(newMap, idGetter)
     }
+}
+
+interface GetIdStrategy{
+    fun getId(player: Player, actual: Vector, destination: Vector, board: Board): Outcome<Int>
 }

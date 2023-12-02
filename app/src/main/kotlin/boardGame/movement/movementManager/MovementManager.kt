@@ -1,8 +1,10 @@
-package boardGame.movement
+package boardGame.movement.movementManager
 
 import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.movement.MovementPerformer
+import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 

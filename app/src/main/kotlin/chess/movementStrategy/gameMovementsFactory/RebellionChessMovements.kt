@@ -1,6 +1,7 @@
 package chess.movementStrategy.gameMovementsFactory
 
 import boardGame.movement.*
+import boardGame.movement.movementManager.*
 import chess.movementStrategy.movementStrategyFactory.*
 
 object RebellionChessMovements: GameMovementsFactory {
@@ -12,7 +13,7 @@ object RebellionChessMovements: GameMovementsFactory {
         movementStrategies[3] = listOf(Movement(KnightMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
         movementStrategies[4] = listOf(Movement(RookMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
         movementStrategies[5] = listOf(Movement(PawnMovementStrategy.getMovementStrategy(), FromTooMovementPerformer))
-        return PieceTypeMovementManager(movementStrategies)
+        return IdMovementManager(movementStrategies, GetPieceTypeId())
     }
 
     override fun getMovementsManagerController(): MovementManagerController {
