@@ -14,6 +14,7 @@ import boardGame.player.MulticolorPlayer
 import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
 import boardGame.winningConditionStrategy.OrUnionWiningCondition
+import checkers.boardFactory.CheckersBoardFiller
 import checkers.game.IfNoKillNextTurn
 import checkers.movement.gameMovementsFactory.CheckersMovementsFactory
 import checkers.winningCondition.OtherPlayerNoMovementsWC
@@ -27,7 +28,7 @@ object CheckersFactory: GameFactory {
         )
 
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
-        board = createTestBoard(board)
+        board = CheckersBoardFiller.fillBoard(board)
 
         val movements: MovementManager = CheckersMovementsFactory.getMovementsManager()
         val movementsController: MovementManagerController = CheckersMovementsFactory.getMovementsManagerController()
