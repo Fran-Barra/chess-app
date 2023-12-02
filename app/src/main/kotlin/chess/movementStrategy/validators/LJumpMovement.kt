@@ -11,7 +11,7 @@ object LJumpMovement: MovementValidator {
     override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                           destination: Vector, board: Board
     ): Boolean {
-        if (!board.positionExists(destination) || !board.positionExists(actual)) return false
+        if (!destinationAndActualExist(board, actual, destination)) return false
 
         if (abs(actual.x - destination.x) == 1) {
             if (abs(actual.y - destination.y) != 2) return false
@@ -20,4 +20,5 @@ object LJumpMovement: MovementValidator {
         }else return false
         return true
     }
+
 }

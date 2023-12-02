@@ -11,7 +11,7 @@ class DistanceLimitMovement(val maxDistance: Int): MovementValidator {
     override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
                           destination: Vector, board: Board
     ): Boolean {
-        if (!board.positionExists(destination) || !board.positionExists(actual)) return false
+        if (!destinationAndActualExist(board, actual, destination)) return false
 
         if (distance(actual, destination).toInt() > maxDistance) return false
         return true
