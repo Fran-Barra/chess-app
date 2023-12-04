@@ -26,8 +26,8 @@ object BasicChessFactory: GameFactory {
         var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
         board = BaseBoardFiller().fillBoard(board)
 
-        val movements: MovementManager = BasicChessMovements.getMovementsManager()
-        val movementsController: MovementManagerController = BasicChessMovements.getMovementsManagerController()
+        val movements: MovementManager = BasicChessMovements(board).getMovementsManager()
+        val movementsController: MovementManagerController = BasicChessMovements(board).getMovementsManagerController()
 
         return BaseGame(board,
             CircleTurnController(players, 0, ForEveryMovementNextTurn()),
