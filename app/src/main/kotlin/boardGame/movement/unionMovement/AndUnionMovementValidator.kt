@@ -2,6 +2,7 @@ package boardGame.movement.unionMovement
 
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.Game
 import boardGame.movement.MovementValidator
 import boardGame.movement.UnionMovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
@@ -13,11 +14,9 @@ class AndUnionMovementValidator(private val strategies: Iterable<MovementValidat
         return AndUnionMovementValidator(strategies.union(strategies))
     }
 
-    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                          destination: Vector, board: Board
-    ): Boolean {
+    override fun validate(player: Player, actual: Vector, destination: Vector, game: Game): Boolean {
         for (movementStrategy in strategies)
-            if (!movementStrategy.validate(pieceEatingRuler, player, actual, destination, board))
+            if (!movementStrategy.validate(player, actual, destination, game))
                 return false
         return true;
     }
