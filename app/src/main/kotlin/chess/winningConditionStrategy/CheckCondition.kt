@@ -51,7 +51,7 @@ private fun canPieceMoveToToCheckPiecePosition(piecePosition: Vector, destiny: V
         is FailedOutcome -> return false
     }
     val movementPerformer = when (val outcome = game.getMovementManager().findValidMovementPerformer(
-        game.getPieceEatingRuler(), actualPlayer, piecePosition, destiny, game.getBoard())
+        actualPlayer, piecePosition, destiny, game)
     ){
         is SuccessfulOutcome -> outcome.data
         is FailedOutcome -> return false

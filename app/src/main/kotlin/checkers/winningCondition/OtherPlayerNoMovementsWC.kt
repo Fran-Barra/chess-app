@@ -41,9 +41,8 @@ class OtherPlayerNoMovementsWC: WinningConditionStrategy {
         }
 
         for (pos in positions) {
-            if (movementM.findValidMovementPerformer(
-                    game.getPieceEatingRuler(), actualPlayer, piecePos, pos, game.getBoard()
-            ) is SuccessfulOutcome) return true
+            if (movementM.findValidMovementPerformer(actualPlayer, piecePos, pos, game) is SuccessfulOutcome)
+                return true
         }
         return false
     }
