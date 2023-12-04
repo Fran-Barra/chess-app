@@ -15,6 +15,7 @@ import boardGame.player.Player
 import boardGame.turnsController.CircleTurnController
 import chess.game.ForEveryMovementNextTurn
 import chess.winningConditionStrategy.CheckmateWinningCondition
+import chess.winningConditionStrategy.TotalAnnihilationWinningCondition
 
 object BasicChessFactory: GameFactory {
     override fun getGame(): Game {
@@ -29,12 +30,13 @@ object BasicChessFactory: GameFactory {
         val movements: MovementManager = BasicChessMovements(board).getMovementsManager()
         val movementsController: MovementManagerController = BasicChessMovements(board).getMovementsManagerController()
 
+        //TODO: checkmate winning condition
         return BaseGame(board,
             CircleTurnController(players, 0, ForEveryMovementNextTurn()),
             BasicEatingRuler(),
             movements,
             movementsController,
-            CheckmateWinningCondition(),
+            TotalAnnihilationWinningCondition(),
         )
     }
 }
