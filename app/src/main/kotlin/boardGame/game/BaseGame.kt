@@ -67,7 +67,7 @@ class BaseGame(private val board: Board,
 
     private fun tryToPerformMovement(origin: Vector, destination: Vector, actualPlayer: Player): Outcome<MovementResult> {
         val movementPerformer: MovementPerformer = when (val outcome =
-            movementManager.findValidMovementPerformer(pieceEatingRuler, actualPlayer, origin, destination, board)){
+            movementManager.findValidMovementPerformer(actualPlayer, origin, destination, this)){
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }

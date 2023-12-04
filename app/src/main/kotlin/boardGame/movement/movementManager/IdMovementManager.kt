@@ -5,8 +5,8 @@ import Outcome
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.Game
 import boardGame.movement.MovementPerformer
-import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 class IdMovementManager(
@@ -14,14 +14,8 @@ class IdMovementManager(
     private val idGetter: GetIdStrategy
 ) : MovementManager {
 
-    override fun findValidMovementPerformer(
-        pieceEatingRuler: PieceEatingRuler,
-        player: Player,
-        actual: Vector,
-        destination: Vector,
-        board: Board
-    ): Outcome<MovementPerformer> {
-        val id: Int = when (val outcome = idGetter.getId(player, actual, destination, board)) {
+    override fun findValidMovementPerformer(player: Player, actual: Vector, destination: Vector, game: Game): Outcome<MovementPerformer> {
+        val id: Int = when (val outcome = idGetter.getId(player, actual, destination, game.getBoard())) {
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return FailedOutcome(outcome.error)
         }
@@ -33,7 +27,7 @@ class IdMovementManager(
             return FailedOutcome("This piece type don't have movements")
 
         for (movement in movementsOfId) {
-            if (!movement.validator.validate(pieceEatingRuler, player, actual, destination, board)) continue
+            if (!movement.validator.validate(player, actual, destination, game)) continue
             return SuccessfulOutcome(movement.performer)
         }
         return FailedOutcome("No valid movement found")

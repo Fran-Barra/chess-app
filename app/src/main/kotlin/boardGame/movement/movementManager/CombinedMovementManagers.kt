@@ -4,10 +4,9 @@ import FailedOutcome
 import IdGenerator
 import Outcome
 import SuccessfulOutcome
-import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.Game
 import boardGame.movement.MovementPerformer
-import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 
@@ -20,12 +19,10 @@ class CombinedMovementManagers(
      * Prioritize the first element of the map
      */
     override fun findValidMovementPerformer(
-        pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector, board: Board
+        player: Player, actual: Vector, destination: Vector, game: Game
     ): Outcome<MovementPerformer> {
         for (manager in managers.values) {
-            when (val outcome = manager.findValidMovementPerformer(
-                pieceEatingRuler, player, actual, destination, board
-            )){
+            when (val outcome = manager.findValidMovementPerformer(player, actual, destination, game)){
                 is SuccessfulOutcome -> return outcome
                 is FailedOutcome -> {}
             }

@@ -61,8 +61,7 @@ class CheckmateWinningCondition: WinningConditionStrategy {
 
         for ((position, _) in game.getBoard().getBoardAssList()) {
             val movementPerformer: MovementPerformer = when (val outcome = game.getMovementManager()
-                .findValidMovementPerformer(game.getPieceEatingRuler(), actualPlayer, pieceToCheckPos,
-                    position, game.getBoard())) {
+                .findValidMovementPerformer(actualPlayer, pieceToCheckPos, position, game)) {
                 is SuccessfulOutcome -> outcome.data
                 is FailedOutcome -> continue
             }
@@ -117,8 +116,7 @@ class CheckmateWinningCondition: WinningConditionStrategy {
         for ((position: Vector, _) in game.getBoard().getBoardAssList()){
             if (position == pieceToCheckPos) continue
             val movementPerformer: MovementPerformer = when (val outcome = game.getMovementManager()
-                .findValidMovementPerformer(game.getPieceEatingRuler(), actualPlayer, pieceToCheckPos,
-                    position, game.getBoard())) {
+                .findValidMovementPerformer(actualPlayer, pieceToCheckPos, position, game)) {
                 is SuccessfulOutcome -> outcome.data
                 is FailedOutcome -> continue
             }

@@ -4,8 +4,6 @@ import boardGame.movement.MovementStrategyFactory
 import boardGame.movement.MovementValidator
 import boardGame.movement.unionMovement.AndUnionMovementValidator
 import checkers.movement.validator.*
-import chess.movementStrategy.validators.DiagonalMovement
-import chess.movementStrategy.validators.DistanceLimitMovement
 
 object CheckerMovement: MovementStrategyFactory {
     private val strategy by lazy {

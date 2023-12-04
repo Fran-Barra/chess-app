@@ -3,16 +3,15 @@ package chess.movementStrategy.validators
 import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.Game
 import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 object VerticalMovement: MovementValidator {
-    override fun validate(pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector,
-                          destination: Vector, board: Board
-    ): Boolean {
+    override fun validate(player: Player, actual: Vector, destination: Vector, game: Game): Boolean {
         if (!isVertical(actual, destination)) return false
-        return !checkIfPieceInMiddlePath(actual, destination, board)
+        return !checkIfPieceInMiddlePath(actual, destination, game.getBoard())
     }
 
     private fun checkIfPieceInMiddlePath(origin: Vector, destini: Vector, board: Board): Boolean{

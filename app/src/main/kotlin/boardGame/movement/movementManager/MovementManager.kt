@@ -3,15 +3,15 @@ package boardGame.movement.movementManager
 import Outcome
 import boardGame.board.Board
 import boardGame.board.Vector
+import boardGame.game.Game
 import boardGame.movement.MovementPerformer
 import boardGame.movement.MovementValidator
 import boardGame.pieceEatingRuler.PieceEatingRuler
 import boardGame.player.Player
 
 interface MovementManager {
-    fun findValidMovementPerformer(
-        pieceEatingRuler: PieceEatingRuler, player: Player, actual: Vector, destination: Vector, board: Board
-    ): Outcome<MovementPerformer>
+    fun findValidMovementPerformer(player: Player, actual: Vector, destination: Vector, game: Game):
+            Outcome<MovementPerformer>
 
     /**
      * movement is the movement to add, while id is from where, this depends on the implementation
