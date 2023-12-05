@@ -6,6 +6,7 @@ import boardGame.movement.movementManager.*
 import chess.movementStrategy.movementPerformer.CastlingPerformer
 import chess.movementStrategy.movementPerformer.EmptyPerformer
 import chess.movementStrategy.movementStrategyFactory.*
+import chess.movementStrategy.updateMovementManagerOverEvent.CheckIfOnEnPassant
 import chess.movementStrategy.updateMovementManagerOverEvent.OnPieceTypeMovedLossMovement
 import chess.movementStrategy.validators.CastlingValidator
 import chess.movementStrategy.validators.RookCastlingValidator
@@ -56,7 +57,7 @@ class BasicChessMovements(private val board: Board): GameMovementsFactory {
             if (piece.getPieceType() != 5) continue
             val movements = map[piece.getPieceId()]?: listOf()
             map[piece.getPieceId()] = movements +
-                    listOf(Movement(PawnStartingMovement2.getMovementStrategy(), FromTooMovementPerformer))
+                    listOf(Movement(PawnStartingMovement2.getMovementStrategy(), FromTooMovementPerformer),)
         }
     }
 
@@ -76,7 +77,8 @@ class BasicChessMovements(private val board: Board): GameMovementsFactory {
         return BaseMovementManagerController(listOf(
             OnPieceTypeMovedLossMovement(5, Movement(PawnStartingMovement2.getMovementStrategy(), FromTooMovementPerformer)),
             OnPieceTypeMovedLossMovement(4, Movement(RookCastlingValidator, EmptyPerformer)),
-            OnPieceTypeMovedLossMovement(0, Movement(CastlingValidator, CastlingPerformer))
+            OnPieceTypeMovedLossMovement(0, Movement(CastlingValidator, CastlingPerformer)),
+            CheckIfOnEnPassant
         ))
     }
 }

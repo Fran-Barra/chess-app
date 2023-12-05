@@ -18,5 +18,5 @@ class BaseMovementManagerController(val managerUpdaters: List<UpdateMovementMana
 }
 
 interface UpdateMovementManagerOverEvent {
-    fun update(manager: MovementManager, event: MovementResult, newGameState: Game): MovementManager
+    fun update(manager: MovementManager, event: MovementResult, oldGameState: Game): MovementManager
 }
