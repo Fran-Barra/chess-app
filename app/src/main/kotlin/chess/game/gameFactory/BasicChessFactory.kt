@@ -30,13 +30,12 @@ object BasicChessFactory: GameFactory {
         val movements: MovementManager = BasicChessMovements(board).getMovementsManager()
         val movementsController: MovementManagerController = BasicChessMovements(board).getMovementsManagerController()
 
-        //TODO: checkmate winning condition
         return BaseGame(board,
             CircleTurnController(players, 0, ForEveryMovementNextTurn()),
             BasicEatingRuler(),
             movements,
             movementsController,
-            TotalAnnihilationWinningCondition(),
+            CheckmateWinningCondition(),
         )
     }
 }
