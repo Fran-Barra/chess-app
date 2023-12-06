@@ -21,10 +21,12 @@ object RookCastlingValidator: MovementValidator {
         if (king.getPieceType() != 0) return false
         if (!player.playerControlColor(king.getPieceColor())) return false
 
-        val rook: Piece = when (val outcome = game.getBoard().getPieceInPosition(destination)){
+        val rook: Piece = when (val outcome = game.getBoard().getPieceInPosition(actual)){
             is SuccessfulOutcome -> outcome.data
             is FailedOutcome -> return false
         }
+
+        if (rook.getPieceType() != 4) return false
         if (!player.playerControlColor(rook.getPieceColor())) return false
         return true
     }
