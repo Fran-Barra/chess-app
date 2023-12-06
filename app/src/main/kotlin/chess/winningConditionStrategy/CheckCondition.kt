@@ -35,8 +35,7 @@ private fun isPositionOnCheck(toCheckPiece: Piece, toCheckPiecePosition: Vector,
 
 
     for ((_: Piece, pos: Vector) in piecesAbleToCheck){
-        if (!canPieceMoveToToCheckPiecePosition(pos, toCheckPiecePosition, game)
-            ) continue
+        if (!canPieceMoveToToCheckPiecePosition(pos, toCheckPiecePosition, game)) continue
         return true
     }
     return false

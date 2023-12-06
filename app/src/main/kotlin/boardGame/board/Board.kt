@@ -58,4 +58,7 @@ class Vector (val x: Int, val y: Int){
         result = 31 * result + y
         return result
     }
+
+    override fun toString(): String = "($x,$y)"
+
 }
