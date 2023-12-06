@@ -43,7 +43,10 @@ class CheckmateWinningCondition: WinningConditionStrategy {
         }
         if (canPieceMoveToNoCheck) return SuccessfulOutcome(false)
 
-        return canAnotherPieceSaveTheCheckPieceFromCheck(pieceToCheck, game)
+        return when (val outcome = canAnotherPieceSaveTheCheckPieceFromCheck(pieceToCheck, game)) {
+            is SuccessfulOutcome -> SuccessfulOutcome(!outcome.data)
+            is FailedOutcome -> outcome
+        }
     }
 
 
@@ -90,8 +93,11 @@ class CheckmateWinningCondition: WinningConditionStrategy {
     }
 
     private fun canAnotherPieceSaveTheCheckPieceFromCheck(checkedPiece: Piece, game: Game): Outcome<Boolean> {
-        for ((piece: Piece, _) in game.getBoard().getPiecesAndPosition()){
-            if (piece.getPieceColor() != checkedPiece.getPieceColor() || piece == checkedPiece) continue
+        val piecesToMove = game.getBoard().getPiecesAndPosition().filter {
+            it.first.getPieceColor() == checkedPiece.getPieceColor() && it.first != checkedPiece
+        }
+        for ((piece: Piece, _) in piecesToMove){
+            //if (piece.getPieceColor() != checkedPiece.getPieceColor() || piece == checkedPiece) continue
             val canThisPieceSave: Boolean = when (val outcome = canThisPieceSaveTheCheckPiece(piece, checkedPiece, game)) {
                 is SuccessfulOutcome -> outcome.data
                 is FailedOutcome -> return outcome
