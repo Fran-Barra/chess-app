@@ -1,5 +1,7 @@
 package chess
 
+import FailedOutcome
+import SuccessfulOutcome
 import boardGame.board.Board
 import boardGame.board.Vector
 import boardGame.board.boardFactory.RectangularBoardBuilder
@@ -70,7 +72,89 @@ class MovementTest {
         )
     }
 
-    //TODO: test Castling
+    /**
+     * The rooks didn't move and the pieces were not in check
+     */
+    @Test
+    fun castlingTest() {
+        testMovement(
+            buildChessGameWithFiller { board ->  baseCastlingFiller(board) },
+            Vector(5, 8),
+            listOf(
+                Vector(4, 8), Vector(4,7), Vector(5, 7), Vector(6,7), Vector(6, 8),
+                Vector(1,8), Vector(8,8)
+            )
+        )
+    }
+
+    @Test
+    fun movementOfRookDisableCastlingWithThatRook() {
+        val game = buildChessGameWithFiller { board -> baseCastlingFiller(board) }
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> {assert(false) {"Need a player"}; return}
+        }
+
+        val leftRookMoved = when (val outcome = game.makeMovement(actualPlayer, Vector(1, 8), Vector(2, 8))) {
+            is MovementFailed -> {assert(false) {"failed: $outcome"}; return}
+            is MovementSuccessful -> outcome.newGameState
+            is PlayerWon -> {assert(false) {"won: $outcome"}; return}
+        }
+
+        val enemyPlayer = when (val outcome = leftRookMoved.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> {assert(false) {"Need a player"}; return}
+        }
+
+        val testState = when (val outcome = leftRookMoved.makeMovement(enemyPlayer, Vector(1, 1), Vector(1,2))) {
+            is MovementFailed -> {assert(false) {"failed: $outcome"}; return}
+            is MovementSuccessful -> outcome.newGameState
+            is PlayerWon -> {assert(false) {"won: $outcome"}; return}
+        }
+
+        testMovement(
+            testState,
+            Vector(5, 8),
+            listOf(
+                Vector(4, 8), Vector(4,7), Vector(5, 7), Vector(6,7), Vector(6, 8),
+                Vector(8,8)
+            )
+        )
+    }
+
+    @Test
+    fun movementOfKingDisableCastling() {
+        val game = buildChessGameWithFiller { board -> baseCastlingFiller(board) }
+        val actualPlayer = when (val outcome = game.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> {assert(false) {"Need a player"}; return}
+        }
+
+        val kingMoved = when (val outcome = game.makeMovement(actualPlayer, Vector(5, 8), Vector(4, 8))) {
+            is MovementFailed -> {assert(false) {"failed: $outcome"}; return}
+            is MovementSuccessful -> outcome.newGameState
+            is PlayerWon -> {assert(false) {"won: $outcome"}; return}
+        }
+
+        val enemyPlayer = when (val outcome = kingMoved.getActualPlayer()) {
+            is SuccessfulOutcome -> outcome.data
+            is FailedOutcome -> {assert(false) {"Need a player"}; return}
+        }
+
+        val testState = when (val outcome = kingMoved.makeMovement(enemyPlayer, Vector(1, 1), Vector(1,2))) {
+            is MovementFailed -> {assert(false) {"failed: $outcome"}; return}
+            is MovementSuccessful -> outcome.newGameState
+            is PlayerWon -> {assert(false) {"won: $outcome"}; return}
+        }
+
+        testMovement(
+            testState,
+            Vector(4, 8),
+            listOf(
+                Vector(3, 8), Vector(3,7), Vector(4, 7), Vector(5,7), Vector(5, 8)
+            )
+        )
+    }
 
     @Test
     fun pawnTest() {
@@ -84,7 +168,36 @@ class MovementTest {
     //TODO: test OnPassant
     //TODO: test Promotion
 
-    //TODO: test winning
+    private fun buildChessGameWithFiller(fill: (Board) -> Board): Game{
+        val players: List<Player> = listOf<Player>(
+            MulticolorPlayer(0, listOf(0)),
+            MulticolorPlayer(1, listOf(1))
+        )
+
+        var board: Board = RectangularBoardBuilder(8, 8).createNewEmptyBoard()
+        board = fill(board)
+
+        val movements: MovementManager = BasicChessMovements(board).getMovementsManager()
+        val movementsController: MovementManagerController = BasicChessMovements(board).getMovementsManagerController()
+
+        //TODO: checkmate winning condition
+        return BaseGame(board,
+            CircleTurnController(players, 0, ForEveryMovementNextTurn()),
+            BasicEatingRuler(),
+            movements,
+            movementsController,
+            TotalAnnihilationWinningCondition(),
+        )
+    }
+
+    private fun baseCastlingFiller(board: Board): Board {
+        var newBoard = board.addPiece(BasicPiece(0, 0), Vector(5, 8))
+
+        newBoard = newBoard.addPiece(BasicPiece(4, 0), Vector(1, 8))
+        newBoard = newBoard.addPiece(BasicPiece(4, 0), Vector(8,8))
+
+        return newBoard.addPiece(BasicPiece(5, 1), Vector(1,1))
+    }
 
     private fun buildChessGameWithPieceInPos(pieceType: Int, pos: Vector): Game{
         val players: List<Player> = listOf<Player>(
